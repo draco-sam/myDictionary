@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow
 
 
     private:
-        Ui::MainWindow *ui;
+        Ui::MainWindow      *ui;
+        QMenu               *m_menu_right_click;
 };
 #endif // MAINWINDOW_H

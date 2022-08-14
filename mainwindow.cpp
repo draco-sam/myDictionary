@@ -11,6 +11,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     //ui->menubar->hide();
     //ui->checkBox->toggled();
     connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
+    //ui->dockWidget_2->hide();
+
+    m_menu_right_click = new QMenu("test",this);
+    m_menu_right_click->addMenu("test");
+    //m_menu_right_click->showTearOffMenu();
+
+
 
 }
 
