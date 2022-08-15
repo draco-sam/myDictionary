@@ -19,7 +19,8 @@ class MainWindow : public QMainWindow
 
     public slots:
         void menu_bar_show_hide(bool change);
-        void open_dict_table_view();
+        void dict_table_view_open();
+        void dict_item_double_clicked();
 
 
     private:

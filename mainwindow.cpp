@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
 
     ui_dict_table_view->setupUi(&m_widget);
-    connect(ui->button_add, &QPushButton::clicked, this, &MainWindow::open_dict_table_view);
+    connect(ui->button_add, &QPushButton::clicked, this, &MainWindow::dict_table_view_open);
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
@@ -46,6 +46,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
 
+    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
+    //connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
 }
 
 MainWindow::~MainWindow()
@@ -70,7 +72,7 @@ void MainWindow::menu_bar_show_hide(bool change){
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::open_dict_table_view(){
+void MainWindow::dict_table_view_open(){
 /*
  *
  */
@@ -78,4 +80,10 @@ void MainWindow::open_dict_table_view(){
 }
 //-------------------------------------------------------------------------------------------------
 
-
+void MainWindow::dict_item_double_clicked(){
+/*
+ *
+ */
+    m_widget.show();
+}
+//-------------------------------------------------------------------------------------------------
