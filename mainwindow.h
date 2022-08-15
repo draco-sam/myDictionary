@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QStandardItemModel>
-#include "ui_dictionary_table_view.h"
+//#include "ui_dictionary_table_view.h"
+//#include "ui_table_view_dict.h"
+#include "ui_table_view_dict.h"
 #include <QtDebug>
 
 QT_BEGIN_NAMESPACE
@@ -26,14 +28,16 @@ class MainWindow : public QMainWindow
 
     private:
         Ui::MainWindow              *ui;
-        Ui::Dictionary_table_view   *ui_dict_table_view;
+        Ui::Table_view_dict         *ui_table_view_dict;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
+        QStandardItemModel          *m_modele_dict_1;
         QStandardItem               *m_item_dictionary;
         QStandardItem               *m_item_1_1_dict;
         QStandardItem               *m_item_2_2_dict;
         QWidget                     m_widget;
-        //QModelIndex                 m_index;
+        QWidget                     m_widget_dict_1;
+        QString                     m_item_1_s;
         QString                     m_item_2_2_s;
 };
 #endif // MAINWINDOW_H

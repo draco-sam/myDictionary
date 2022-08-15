@@ -3,15 +3,18 @@
 
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
-    ui_dict_table_view(new Ui::Dictionary_table_view)
+    ui_table_view_dict(new Ui::Table_view_dict)
 /*
  *
  */
 {
     ui->setupUi(this);
 
-    ui_dict_table_view->setupUi(&m_widget);
-    connect(ui->button_add, &QPushButton::clicked, this, &MainWindow::dict_table_view_open);
+    ui_table_view_dict->setupUi(&m_widget_dict_1);
+
+    m_modele_dict_1 = new QStandardItemModel(5,3);
+    m_modele_dict_1->setItem(3,1, new QStandardItem("Sam dic 1"));
+    ui_table_view_dict->tableView->setModel(m_modele_dict_1);
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
@@ -27,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
     m_item_dictionary       = new QStandardItem("Dictionary_1");
     m_modele_dictionary->appendRow(m_item_dictionary);
+    m_item_1_s = m_item_dictionary->index().data().toString();
 
     //m_item_dictionary->appendRow(new QStandardItem("Dictionary_1.1"));
     m_item_1_1_dict       = new QStandardItem("Dictionary_1.1");
@@ -63,8 +67,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 
 MainWindow::~MainWindow()
 {
+
+    m_widget_dict_1.close();//??
     delete  m_modele_dictionary;
     delete  m_menu_right_click;
+
+    delete ui_table_view_dict;
     delete  ui;
 }
 
@@ -98,9 +106,14 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
  */
     //qDebug()<<"index = "<<index;
 
+    qDebug()<<"index.data().toString() = "<<index.data().toString();
+    qDebug()<<"m_item_1_s = "<<m_item_1_s;
     //Check if the string of the index is "Dictionary_2.2".
     //If yes, open another GUI.
-    if(index.data().toString() == m_item_2_2_s){
+    if(index.data().toString() == m_item_1_s){
+        m_widget_dict_1.show();
+    }
+    else if(index.data().toString() == m_item_2_2_s){
         m_widget.show();
     }
 

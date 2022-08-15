@@ -16,8 +16,8 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
-    dictionary_table_view.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    table_view_dict.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
