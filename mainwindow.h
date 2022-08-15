@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QStandardItemModel>
 #include "ui_dictionary_table_view.h"
+#include <QtDebug>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -20,7 +21,7 @@ class MainWindow : public QMainWindow
     public slots:
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
-        void dict_item_double_clicked();
+        void dict_item_double_clicked(QModelIndex index);
 
 
     private:
@@ -32,5 +33,6 @@ class MainWindow : public QMainWindow
         QStandardItem               *m_item_1_1_dict;
         QStandardItem               *m_item_2_2_dict;
         QWidget                     m_widget;
+        QModelIndex                 m_index;
 };
 #endif // MAINWINDOW_H

@@ -43,11 +43,19 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_item_dictionary->appendRow(m_item_2_2_dict);
     m_item_2_2_dict->appendRow(new QStandardItem("Dictionary_2.2.1"));
 
+    m_index = m_item_2_2_dict->index();
+    qDebug()<<"For m_item_2_2_dict : m_index = "<<m_index;
+    qDebug()<<"For m_item_2_2_dict : column = "<<m_index.column();
+    qDebug()<<"For m_item_2_2_dict : row = "<<m_index.row();
+    qDebug()<<"For m_item_2_2_dict : data = "<<m_index.data();
+    qDebug()<<"For m_item_2_2_dict : string = "<<m_index.data().toString();
+
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
 
+    //Open a specific dictionary when we do a double click on any one items :
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
-    //connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
+
 }
 
 MainWindow::~MainWindow()
@@ -80,10 +88,12 @@ void MainWindow::dict_table_view_open(){
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::dict_item_double_clicked(){
+void MainWindow::dict_item_double_clicked(QModelIndex index){
 /*
  *
  */
+    qDebug()<<"index = "<<index;
+
     m_widget.show();
 }
 //-------------------------------------------------------------------------------------------------
