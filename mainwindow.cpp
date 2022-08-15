@@ -17,13 +17,37 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_menu_right_click->addMenu("test");
     //m_menu_right_click->showTearOffMenu();
 
+    //Dictionaries on Main Window : -------------------------------------------
+    m_modele_dictionary     = new QStandardItemModel;
 
+    m_item_dictionary       = new QStandardItem("Dictionary_1");
+    m_modele_dictionary->appendRow(m_item_dictionary);
+
+    //m_item_dictionary->appendRow(new QStandardItem("Dictionary_1.1"));
+    m_item_1_1_dict       = new QStandardItem("Dictionary_1.1");
+    m_item_dictionary->appendRow(m_item_1_1_dict);
+    m_item_1_1_dict->appendRow(new QStandardItem("Dictionary_1.1.1"));
+
+    m_item_dictionary->appendRow(new QStandardItem("Dictionary_1.2"));
+
+    m_item_dictionary       = new QStandardItem("Dictionary_2");
+    m_modele_dictionary->appendRow(m_item_dictionary);
+    m_item_dictionary->appendRow(new QStandardItem("Dictionary_2.1"));
+
+    m_item_2_2_dict       = new QStandardItem("Dictionary_2.2");
+    m_item_dictionary->appendRow(m_item_2_2_dict);
+    m_item_2_2_dict->appendRow(new QStandardItem("Dictionary_2.2.1"));
+
+    ui->treeView->setModel(m_modele_dictionary);
+    //-------------------------------------------------------------------------
 
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    delete  m_modele_dictionary;
+    delete  m_menu_right_click;
+    delete  ui;
 }
 
 //-------------------------------------------------------------------------------------------------
