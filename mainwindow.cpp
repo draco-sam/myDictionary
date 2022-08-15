@@ -39,16 +39,19 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_modele_dictionary->appendRow(m_item_dictionary);
     m_item_dictionary->appendRow(new QStandardItem("Dictionary_2.1"));
 
-    m_item_2_2_dict       = new QStandardItem("Dictionary_2.2");
+    m_item_2_2_dict         = new QStandardItem("Dictionary_2.2");
     m_item_dictionary->appendRow(m_item_2_2_dict);
     m_item_2_2_dict->appendRow(new QStandardItem("Dictionary_2.2.1"));
+    m_item_2_2_s            = m_item_2_2_dict->index().data().toString();
 
-    m_index = m_item_2_2_dict->index();
-    qDebug()<<"For m_item_2_2_dict : m_index = "<<m_index;
-    qDebug()<<"For m_item_2_2_dict : column = "<<m_index.column();
-    qDebug()<<"For m_item_2_2_dict : row = "<<m_index.row();
-    qDebug()<<"For m_item_2_2_dict : data = "<<m_index.data();
-    qDebug()<<"For m_item_2_2_dict : string = "<<m_index.data().toString();
+//    m_index = m_item_2_2_dict->index();
+//    qDebug()<<"For m_item_2_2_dict : m_index = "<<m_index;
+//    qDebug()<<"For m_item_2_2_dict : column = "<<m_index.column();
+//    qDebug()<<"For m_item_2_2_dict : row = "<<m_index.row();
+//    qDebug()<<"For m_item_2_2_dict : data = "<<m_index.data();
+//    qDebug()<<"For m_item_2_2_dict : string = "<<m_index.data().toString();
+//    m_item_2_2_s = m_item_2_2_dict->index().data().toString();
+//    qDebug()<<"m_item_2_2_s = "<<m_item_2_2_s;
 
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
@@ -90,10 +93,17 @@ void MainWindow::dict_table_view_open(){
 
 void MainWindow::dict_item_double_clicked(QModelIndex index){
 /*
- *
+ * Open another GUI created by Qt Designer if the string of the index
+ * is the string of a specific item on the TreeView.
  */
-    qDebug()<<"index = "<<index;
+    //qDebug()<<"index = "<<index;
 
-    m_widget.show();
+    //Check if the string of the index is "Dictionary_2.2".
+    //If yes, open another GUI.
+    if(index.data().toString() == m_item_2_2_s){
+        m_widget.show();
+    }
+
+
 }
 //-------------------------------------------------------------------------------------------------

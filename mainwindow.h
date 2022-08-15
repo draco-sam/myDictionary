@@ -33,6 +33,7 @@ class MainWindow : public QMainWindow
         QStandardItem               *m_item_1_1_dict;
         QStandardItem               *m_item_2_2_dict;
         QWidget                     m_widget;
-        QModelIndex                 m_index;
+        //QModelIndex                 m_index;
+        QString                     m_item_2_2_s;
 };
 #endif // MAINWINDOW_H
