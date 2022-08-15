@@ -1,14 +1,17 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
-//MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
-//    ui_dict_table_view(new Ui::Dictionary_table_view)
+//MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
+    ui_dict_table_view(new Ui::Dictionary_table_view)
 /*
  *
  */
 {
     ui->setupUi(this);
+
+    ui_dict_table_view->setupUi(&m_widget);
+    connect(ui->button_add, &QPushButton::clicked, this, &MainWindow::open_dict_table_view);
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
@@ -71,7 +74,7 @@ void MainWindow::open_dict_table_view(){
 /*
  *
  */
-    //ui_dict_table_view->exec();
+    m_widget.show();
 }
 //-------------------------------------------------------------------------------------------------
 
