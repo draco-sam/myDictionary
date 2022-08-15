@@ -16,6 +16,7 @@ HEADERS += \
     mainwindow.h
 
 FORMS += \
+    dictionary_table_view.ui \
     mainwindow.ui
 
 # Default rules for deployment.

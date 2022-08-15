@@ -19,10 +19,19 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QTreeView" name="treeView">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
         <property name="autoExpandDelay">
          <number>-1</number>
         </property>
         <property name="rootIsDecorated">
+         <bool>true</bool>
+        </property>
+        <property name="animated">
          <bool>true</bool>
         </property>
         <property name="allColumnsShowFocus">
