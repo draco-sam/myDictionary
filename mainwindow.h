@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QStandardItemModel>
-//#include "ui_dictionary_table_view.h"
-//#include "ui_table_view_dict.h"
 #include "ui_table_view_dict.h"
 #include <QtDebug>
+#include "QtSql/QSqlDatabase"
+#include "QSqlQuery"
+#include "QMessageBox"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +20,7 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
+        void sql_test();
 
     public slots:
         void menu_bar_show_hide(bool change);
@@ -39,5 +41,7 @@ class MainWindow : public QMainWindow
         QWidget                     m_widget_dict_1;
         QString                     m_item_1_s;
         QString                     m_item_2_2_s;
+        int16_t                     m_dict_1_row;
+        int16_t                     m_dict_1_column;
 };
 #endif // MAINWINDOW_H

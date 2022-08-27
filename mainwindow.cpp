@@ -3,7 +3,8 @@
 
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
-    ui_table_view_dict(new Ui::Table_view_dict)
+    ui_table_view_dict(new Ui::Table_view_dict),m_menu_right_click(0), m_modele_dictionary(0),
+    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0)
 /*
  *
  */
@@ -11,8 +12,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     ui->setupUi(this);
 
     ui_table_view_dict->setupUi(&m_widget_dict_1);
+    m_widget_dict_1.setWindowState(Qt::WindowMaximized);
 
-    m_modele_dict_1 = new QStandardItemModel(5,3);
+    m_modele_dict_1 = new QStandardItemModel(10,3);
     m_modele_dict_1->setItem(3,1, new QStandardItem("Sam dic 1"));
     ui_table_view_dict->tableView->setModel(m_modele_dict_1);
 
@@ -63,6 +65,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     //Open a specific dictionary when we do a double click on any one items :
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
+    sql_test();
+
 }
 
 MainWindow::~MainWindow()
@@ -101,7 +105,7 @@ void MainWindow::dict_table_view_open(){
 
 void MainWindow::dict_item_double_clicked(QModelIndex index){
 /*
- * Open another GUI created by Qt Designer if the string of the index
+ * Open another GUI created on Qt Designer if the string of the index
  * is the string of a specific item on the TreeView.
  */
     //qDebug()<<"index = "<<index;
@@ -120,3 +124,63 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
 
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::sql_test(){
+/*
+ *
+ */
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+
+    //Sets the connection's database : --------------------------------------------------
+    /* To have effect, the database name must be set before the connection is opened.
+     *
+     * For the QSQLITE driver, if the database name specified does not exist,
+     * hen it will create the file for you
+     * unless the QSQLITE_OPEN_READONLY option is set.
+     */
+
+    db.setDatabaseName("dictionary_1.db");
+    //-----------------------------------------------------------------------------------
+
+    if (!db.open()) {
+        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
+            QObject::tr("Unable to establish a database connection.\n"
+                        "This example needs SQLite support. Please read "
+                        "the Qt SQL driver documentation for information how "
+                        "to build it.\n\n"
+                        "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+
+    QSqlQuery query;
+
+//    query.exec("create table dictionary_1 (id int primary key, "
+//               "english varchar(20), french varchar(20), date varchar(10))");
+
+//    query.exec("insert into dictionary_1 values(101, 'hello', 'bonjour', '25/08/2022')");
+//    query.exec("insert into dictionary_1 values(102, 'welcom', 'bienvenue', '26/08/2022')");
+//    query.exec("insert into dictionary_1 values(103, 'word', 'mot', '27/08/2022')");
+
+    query.exec("SELECT english, french, date FROM dictionary_1");
+
+    while(query.next()){
+        /*************************************************************************
+         * "query.next()" set the current record.
+         *
+         * The index of the "query.value(...)" return the field of the command
+         * "SELECT firstname, lastname FROM person".
+         *
+         * The filed are numbered from left (0) to right (1).
+         *************************************************************************/
+
+        m_modele_dict_1->setItem(m_dict_1_row,0,
+                                 new QStandardItem(query.value(0).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,1,
+                                 new QStandardItem(query.value(1).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,2,
+                                 new QStandardItem(query.value(2).toString()));
+        m_dict_1_row++;
+
+        qDebug()<<query.value(0).toString()<<" : "<<query.value(1).toString()<<
+                  " : "<<query.value(2).toString();
+    }
+}

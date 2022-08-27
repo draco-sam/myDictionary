@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Table_view_dict</class>
+ <widget class="QWidget" name="Table_view_dict">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -17,7 +17,14 @@
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
-      <widget class="QTableView" name="tableView"/>
+      <widget class="QTableView" name="tableView">
+       <attribute name="horizontalHeaderMinimumSectionSize">
+        <number>300</number>
+       </attribute>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>300</number>
+       </attribute>
+      </widget>
      </item>
     </layout>
    </item>
