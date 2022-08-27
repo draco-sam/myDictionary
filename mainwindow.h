@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
         void dict_table_view_open();
         void dict_item_double_clicked(QModelIndex index);
         void config_table_view_dict();
+        void add_sql_data();
 
 
     private:
@@ -44,5 +45,6 @@ class MainWindow : public QMainWindow
         QString                     m_item_2_2_s;
         int16_t                     m_dict_1_row;
         int16_t                     m_dict_1_column;
+        QSqlQuery                   *m_sql_query;
 };
 #endif // MAINWINDOW_H

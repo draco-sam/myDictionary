@@ -4,7 +4,8 @@
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
     ui_table_view_dict(new Ui::Table_view_dict),m_menu_right_click(0), m_modele_dictionary(0),
-    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0)
+    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
+    m_sql_query(0)
 /*
  *
  */
@@ -60,6 +61,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     //Open a specific dictionary when we do a double click on any one items :
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
+    //m_sql_query = new QSqlQuery;
     sql_test();
 
 }
@@ -171,7 +173,7 @@ void MainWindow::sql_test(){
 
 //    query.exec("insert into dictionary_1 values(101, 'hello', 'bonjour', '25/08/2022')");
 //    query.exec("insert into dictionary_1 values(102, 'welcom', 'bienvenue', '26/08/2022')");
-//    query.exec("insert into dictionary_1 values(103, 'word', 'mot', '27/08/2022')");
+    query.exec("insert into dictionary_1 values(4, 'dictionary', 'dictionnaire', '27/08/2022')");
 
     query.exec("SELECT english, french, date FROM dictionary_1");
 
@@ -199,6 +201,13 @@ void MainWindow::sql_test(){
 }
 //-------------------------------------------------------------------------------------------------
 
+void MainWindow::add_sql_data(){
+/*
+ *
+ */
+    //ui_table_view_dict->line_edit_english->text();
+    //query.exec("insert into dictionary_1 values(4, 'dictionary', 'dictionnaire', '27/08/2022')");
 
-
+}
+//-------------------------------------------------------------------------------------------------
 
