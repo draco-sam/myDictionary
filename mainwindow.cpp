@@ -11,17 +11,12 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
 {
     ui->setupUi(this);
 
-    ui_table_view_dict->setupUi(&m_widget_dict_1);
-    m_widget_dict_1.setWindowState(Qt::WindowMaximized);
-
-    m_modele_dict_1 = new QStandardItemModel(10,3);
-    m_modele_dict_1->setItem(3,1, new QStandardItem("Sam dic 1"));
-    ui_table_view_dict->tableView->setModel(m_modele_dict_1);
-
     //ui->menubar->hide();
     //ui->checkBox->toggled();
     connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
     //ui->dockWidget_2->hide();
+
+    config_table_view_dict();
 
     m_menu_right_click = new QMenu("test",this);
     m_menu_right_click->addMenu("test");
@@ -112,6 +107,7 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
 
     qDebug()<<"index.data().toString() = "<<index.data().toString();
     qDebug()<<"m_item_1_s = "<<m_item_1_s;
+
     //Check if the string of the index is "Dictionary_2.2".
     //If yes, open another GUI.
     if(index.data().toString() == m_item_1_s){
@@ -122,6 +118,23 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
     }
 
 
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::config_table_view_dict(){
+/*
+ * Tabe View dictionary that will contain words in a sql database.
+ */
+    ui_table_view_dict->setupUi(&m_widget_dict_1);
+    m_widget_dict_1.setWindowState(Qt::WindowMaximized);
+
+    QStringList horizontal_header_labels = {"English","Français","date"};
+
+    m_modele_dict_1 = new QStandardItemModel(10,3);
+    m_modele_dict_1->setHorizontalHeaderLabels(horizontal_header_labels);
+    m_modele_dict_1->setItem(4,1, new QStandardItem("Sam dic 1"));
+
+    ui_table_view_dict->tableView->setModel(m_modele_dict_1);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -184,3 +197,8 @@ void MainWindow::sql_test(){
                   " : "<<query.value(2).toString();
     }
 }
+//-------------------------------------------------------------------------------------------------
+
+
+
+

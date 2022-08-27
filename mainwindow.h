@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
         void dict_item_double_clicked(QModelIndex index);
+        void config_table_view_dict();
 
 
     private:
