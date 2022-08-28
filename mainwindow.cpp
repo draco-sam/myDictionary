@@ -194,19 +194,61 @@ void MainWindow::sql_edit_table_view(){
 
 void MainWindow::add_sql_data(){
 /*
- *
+ * !!! Put name of the table in sql database in QString variable !!!
  */
-    QString word_english = "";
-    QString word_french = "";
-    QString date_s = "";
+    QString word_english    = "";
+    QString word_french     = "";
+    QString date_s          = "";
+    QString id_num_s        = "";
+    QString query_s         = "insert into dictionary_1 values(";
 
     word_english    = ui_table_view_dict->line_edit_english->text();
     word_french     = ui_table_view_dict->line_edit_french->text();
     date_s          = ui_table_view_dict->line_edit_date->text();
 
-    qDebug()<<"m_dict_1_row = ";QString::number(m_dict_1_row);
-    qDebug()<<"line_edit_english = "<<ui_table_view_dict->line_edit_english->text();
-    //query.exec("insert into dictionary_1 values(5, 'purchase', 'achat', '28/08/2022')");
+    id_num_s        = QString::number(m_dict_1_row + 1);
+
+//    query_s + id_num_s + ",'" + word_english + "','" + word_french + "','" + date_s + "')";
+    query_s.append(id_num_s);
+    query_s.append(",'");
+    query_s.append(word_english);
+    query_s.append("','");
+    query_s.append(word_french);
+    query_s.append("','");
+    query_s.append(date_s);
+    query_s.append("')");
+
+    qDebug()<<"query_s = "<<query_s;
+//    qDebug()<<"m_dict_1_row = "<<QString::number(m_dict_1_row);
+//    qDebug()<<"line_edit_english = "<<ui_table_view_dict->line_edit_english->text();
+//    m_sql_query->exec("insert into dictionary_1 values(5, 'purchase', 'achat', '28/08/2022')");
+    //m_sql_query->exec("insert into dictionary_1 values(5, 'purchase', 'achat', '28/08/2022')");
+    m_sql_query->exec(query_s);
+
+    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+
+//    while(m_sql_query->next()){
+        /*************************************************************************
+         * "query.next()" set the current record.
+         *
+         * The index of the "query.value(...)" return the field of the command
+         * "SELECT firstname, lastname FROM person".
+         *
+         * The filed are numbered from left (0) to right (1).
+         *************************************************************************/
+        m_sql_query->last();
+
+        m_modele_dict_1->setItem(m_dict_1_row,0,
+                                 new QStandardItem(m_sql_query->value(0).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,1,
+                                 new QStandardItem(m_sql_query->value(1).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,2,
+                                 new QStandardItem(m_sql_query->value(2).toString()));
+        m_dict_1_row++;
+
+        qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
+                  " : "<<m_sql_query->value(2).toString();
+//    }
 
 }
 //-------------------------------------------------------------------------------------------------
