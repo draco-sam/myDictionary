@@ -5,7 +5,7 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
     ui_table_view_dict(new Ui::Table_view_dict),m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
-    m_sql_query(0)
+    m_sql_query(0),m_sql_db(0)
 /*
  *
  */
@@ -61,8 +61,35 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     //Open a specific dictionary when we do a double click on any one items :
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
-    //m_sql_query = new QSqlQuery;
-    sql_test();
+    //sql test : ----------------------------------------------------------------------------------
+    m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+    m_sql_db->setDatabaseName("pointer.db");
+
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
+
+        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
+            QObject::tr("Unable to establish a database connection.\n"
+                        "This example needs SQLite support. Please read "
+                        "the Qt SQL driver documentation for information how "
+                        "to build it.\n\n"
+                        "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+
+    m_sql_query = new QSqlQuery(*m_sql_db);
+    m_sql_query->exec("create table dictionary_1 (id int primary key, "
+               "english varchar(20), french varchar(20), date varchar(10))");
+    m_sql_query->exec("insert into dictionary_1 values(1, 'pointer', 'pointeur', '28/08/2022')");
+
+    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+
+    while(m_sql_query->next()){
+        qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
+                  " : "<<m_sql_query->value(2).toString();
+    }
+
+    //sql_test();
+    //---------------------------------------------------------------------------------------------
 
 }
 
@@ -165,7 +192,7 @@ void MainWindow::sql_test(){
                         "to build it.\n\n"
                         "Click Cancel to exit."), QMessageBox::Cancel);
     }
-
+    db.setDatabaseName("dictionary_1.db");
     QSqlQuery query;
 
 //    query.exec("create table dictionary_1 (id int primary key, "

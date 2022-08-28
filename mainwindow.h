@@ -46,5 +46,6 @@ class MainWindow : public QMainWindow
         int16_t                     m_dict_1_row;
         int16_t                     m_dict_1_column;
         QSqlQuery                   *m_sql_query;
+        QSqlDatabase                *m_sql_db;
 };
 #endif // MAINWINDOW_H
