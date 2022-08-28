@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-        void sql_test();
+        void sql_edit_table_view();
 
     public slots:
         void menu_bar_show_hide(bool change);

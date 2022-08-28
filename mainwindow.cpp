@@ -61,34 +61,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     //Open a specific dictionary when we do a double click on any one items :
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
+    connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
+
+
+
     //sql test : ----------------------------------------------------------------------------------
     m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
-    m_sql_db->setDatabaseName("pointer.db");
-
-    if (!m_sql_db->open()) {
-        qDebug()<<"Cannot open database";
-
-        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
-            QObject::tr("Unable to establish a database connection.\n"
-                        "This example needs SQLite support. Please read "
-                        "the Qt SQL driver documentation for information how "
-                        "to build it.\n\n"
-                        "Click Cancel to exit."), QMessageBox::Cancel);
-    }
+    m_sql_db->setDatabaseName("dictionary_1.db");
 
     m_sql_query = new QSqlQuery(*m_sql_db);
-    m_sql_query->exec("create table dictionary_1 (id int primary key, "
-               "english varchar(20), french varchar(20), date varchar(10))");
-    m_sql_query->exec("insert into dictionary_1 values(1, 'pointer', 'pointeur', '28/08/2022')");
-
-    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
-
-    while(m_sql_query->next()){
-        qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
-                  " : "<<m_sql_query->value(2).toString();
-    }
-
-    //sql_test();
     //---------------------------------------------------------------------------------------------
 
 }
@@ -140,6 +121,7 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
     //Check if the string of the index is "Dictionary_2.2".
     //If yes, open another GUI.
     if(index.data().toString() == m_item_1_s){
+        sql_edit_table_view();
         m_widget_dict_1.show();
     }
     else if(index.data().toString() == m_item_2_2_s){
@@ -167,24 +149,15 @@ void MainWindow::config_table_view_dict(){
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::sql_test(){
+void MainWindow::sql_edit_table_view(){
 /*
+ * Edit the items on the table view with sql data.
  *
+ * ??? db.close() ???
  */
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
 
-    //Sets the connection's database : --------------------------------------------------
-    /* To have effect, the database name must be set before the connection is opened.
-     *
-     * For the QSQLITE driver, if the database name specified does not exist,
-     * hen it will create the file for you
-     * unless the QSQLITE_OPEN_READONLY option is set.
-     */
-
-    db.setDatabaseName("dictionary_1.db");
-    //-----------------------------------------------------------------------------------
-
-    if (!db.open()) {
         QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
             QObject::tr("Unable to establish a database connection.\n"
                         "This example needs SQLite support. Please read "
@@ -192,19 +165,10 @@ void MainWindow::sql_test(){
                         "to build it.\n\n"
                         "Click Cancel to exit."), QMessageBox::Cancel);
     }
-    db.setDatabaseName("dictionary_1.db");
-    QSqlQuery query;
 
-//    query.exec("create table dictionary_1 (id int primary key, "
-//               "english varchar(20), french varchar(20), date varchar(10))");
+    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
 
-//    query.exec("insert into dictionary_1 values(101, 'hello', 'bonjour', '25/08/2022')");
-//    query.exec("insert into dictionary_1 values(102, 'welcom', 'bienvenue', '26/08/2022')");
-    query.exec("insert into dictionary_1 values(4, 'dictionary', 'dictionnaire', '27/08/2022')");
-
-    query.exec("SELECT english, french, date FROM dictionary_1");
-
-    while(query.next()){
+    while(m_sql_query->next()){
         /*************************************************************************
          * "query.next()" set the current record.
          *
@@ -215,15 +179,15 @@ void MainWindow::sql_test(){
          *************************************************************************/
 
         m_modele_dict_1->setItem(m_dict_1_row,0,
-                                 new QStandardItem(query.value(0).toString()));
+                                 new QStandardItem(m_sql_query->value(0).toString()));
         m_modele_dict_1->setItem(m_dict_1_row,1,
-                                 new QStandardItem(query.value(1).toString()));
+                                 new QStandardItem(m_sql_query->value(1).toString()));
         m_modele_dict_1->setItem(m_dict_1_row,2,
-                                 new QStandardItem(query.value(2).toString()));
+                                 new QStandardItem(m_sql_query->value(2).toString()));
         m_dict_1_row++;
 
-        qDebug()<<query.value(0).toString()<<" : "<<query.value(1).toString()<<
-                  " : "<<query.value(2).toString();
+        qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
+                  " : "<<m_sql_query->value(2).toString();
     }
 }
 //-------------------------------------------------------------------------------------------------
@@ -232,8 +196,17 @@ void MainWindow::add_sql_data(){
 /*
  *
  */
-    //ui_table_view_dict->line_edit_english->text();
-    //query.exec("insert into dictionary_1 values(4, 'dictionary', 'dictionnaire', '27/08/2022')");
+    QString word_english = "";
+    QString word_french = "";
+    QString date_s = "";
+
+    word_english    = ui_table_view_dict->line_edit_english->text();
+    word_french     = ui_table_view_dict->line_edit_french->text();
+    date_s          = ui_table_view_dict->line_edit_date->text();
+
+    qDebug()<<"m_dict_1_row = ";QString::number(m_dict_1_row);
+    qDebug()<<"line_edit_english = "<<ui_table_view_dict->line_edit_english->text();
+    //query.exec("insert into dictionary_1 values(5, 'purchase', 'achat', '28/08/2022')");
 
 }
 //-------------------------------------------------------------------------------------------------
