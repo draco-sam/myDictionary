@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>667</width>
-    <height>475</height>
+    <width>500</width>
+    <height>200</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>350</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>500</width>
+    <height>200</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -20,7 +32,7 @@
       <widget class="QLineEdit" name="line_english">
        <property name="minimumSize">
         <size>
-         <width>200</width>
+         <width>100</width>
          <height>0</height>
         </size>
        </property>
@@ -30,7 +42,7 @@
       <widget class="QLineEdit" name="line_french">
        <property name="minimumSize">
         <size>
-         <width>200</width>
+         <width>100</width>
          <height>0</height>
         </size>
        </property>

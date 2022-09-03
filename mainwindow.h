@@ -7,6 +7,7 @@
 #include "QtSql/QSqlDatabase"
 #include "QSqlQuery"
 #include "QMessageBox"
+#include <QTimer>
 #include "ui_table_view_dict.h"
 #include "windowpopup.h"
 
@@ -24,12 +25,15 @@ class MainWindow : public QMainWindow
         ~MainWindow();
         void sql_edit_table_view();
 
+
     public slots:
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
         void dict_item_double_clicked(QModelIndex index);
         void config_table_view_dict();
         void add_sql_data();
+        void window_popup_show();
+        void close_widget();
 
 
     private:
@@ -50,5 +54,6 @@ class MainWindow : public QMainWindow
         int16_t                     m_dict_1_column;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;
+        QTimer                      *m_timer_popup;
 };
 #endif // MAINWINDOW_H

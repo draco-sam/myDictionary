@@ -14,6 +14,8 @@ class WindowPopUp : public QWidget
 public:
     explicit WindowPopUp(QWidget *parent = nullptr);
     ~WindowPopUp();
+    void line_english_set_text(QString text);
+    void line_french_set_text(QString text);
 
 private:
     Ui::WindowPopUp *ui;

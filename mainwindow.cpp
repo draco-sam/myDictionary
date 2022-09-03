@@ -5,7 +5,7 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
     ui_table_view_dict(new Ui::Table_view_dict),m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
-    m_sql_query(0),m_sql_db(0)
+    m_sql_query(0),m_sql_db(0),m_timer_popup(0)
 /*
  *
  */
@@ -72,19 +72,21 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_sql_query = new QSqlQuery(*m_sql_db);
     //---------------------------------------------------------------------------------------------
 
-    //(0,0) : Top left on Windows 10 :
-    QPoint point_popup;
-    point_popup.setX(0);
-    point_popup.setY(0);
+    //First call of the pop up window with a timer :
+    m_timer_popup = new QTimer(this);
+    connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
+    m_timer_popup->start(2000);
 
-    m_window_popup.move(point_popup);
-    m_window_popup.show();
 
 
 }
 
 MainWindow::~MainWindow()
 {
+    //qDebug()<<"!!! destructor !!!"<<m_window_popup.close();
+    qDebug()<<"!!! destructor !!!";
+
+    //m_window_popup.hide();
 
     m_widget_dict_1.close();//??
     delete  m_modele_dictionary;
@@ -262,3 +264,31 @@ void MainWindow::add_sql_data(){
 }
 //-------------------------------------------------------------------------------------------------
 
+void MainWindow::window_popup_show(){
+/*
+ * (0,0) : Top left on Windows 10
+ */
+    QPoint point_popup;
+    point_popup.setX(775);
+    point_popup.setY(455);
+
+    m_window_popup.move(point_popup);
+    m_window_popup.setWindowState(Qt::WindowState::WindowActive);
+
+    m_window_popup.line_english_set_text("english");
+    m_window_popup.line_french_set_text("français");
+
+    m_window_popup.show();
+
+    m_timer_popup->start(5000);
+    //m_timer_popup->stop();
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::close_widget(){
+/*
+ *
+ */
+    m_window_popup.close();
+}
+//-------------------------------------------------------------------------------------------------
