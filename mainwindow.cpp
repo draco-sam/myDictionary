@@ -72,6 +72,15 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_sql_query = new QSqlQuery(*m_sql_db);
     //---------------------------------------------------------------------------------------------
 
+    //(0,0) : Top left on Windows 10 :
+    QPoint point_popup;
+    point_popup.setX(0);
+    point_popup.setY(0);
+
+    m_window_popup.move(point_popup);
+    m_window_popup.show();
+
+
 }
 
 MainWindow::~MainWindow()

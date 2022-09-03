@@ -3,11 +3,13 @@
 
 #include <QMainWindow>
 #include <QStandardItemModel>
-#include "ui_table_view_dict.h"
 #include <QtDebug>
 #include "QtSql/QSqlDatabase"
 #include "QSqlQuery"
 #include "QMessageBox"
+#include "ui_table_view_dict.h"
+#include "windowpopup.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,6 +35,7 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow              *ui;
         Ui::Table_view_dict         *ui_table_view_dict;
+        WindowPopUp                 m_window_popup;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
         QStandardItemModel          *m_modele_dict_1;
