@@ -8,6 +8,8 @@
 #include "QSqlQuery"
 #include "QMessageBox"
 #include <QTimer>
+#include <QRandomGenerator>
+#include <QSqlRecord>
 #include "ui_table_view_dict.h"
 #include "windowpopup.h"
 
@@ -39,6 +41,7 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow              *ui;
         Ui::Table_view_dict         *ui_table_view_dict;
+        Ui::WindowPopUp             *ui_popup;//Test !!!
         WindowPopUp                 m_window_popup;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
@@ -54,6 +57,10 @@ class MainWindow : public QMainWindow
         int16_t                     m_dict_1_column;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;
+        uint16_t                    m_sql_row_count;
+        uint16_t                    m_random;
+        QStringList                 m_list_day;
+        uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;
 };
 #endif // MAINWINDOW_H

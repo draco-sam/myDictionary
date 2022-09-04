@@ -1,16 +1,38 @@
+/**************************************************************************************************
+ * Name of the project  : my_dictionary.
+ *
+ * Name of the creator  : Sam.
+ * Date                 : 04/09/2022
+ *
+ * Description          :
+ *
+ * Remarks              :
+ *
+ * Improvements         :
+ *  - Put sql attributes, methodes, signals and slots in a separate class file (04/09/2022).
+ *  - Show the QStringList in construction (during the day) when the mouse passes over the window.
+ *************************************************************************************************/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "ui_windowpopup.h"
 
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
-MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
-    ui_table_view_dict(new Ui::Table_view_dict),m_menu_right_click(0), m_modele_dictionary(0),
+MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
+    ui(new Ui::MainWindow),ui_table_view_dict(new Ui::Table_view_dict),
+    ui_popup(new Ui::WindowPopUp),
+
+    m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
-    m_sql_query(0),m_sql_db(0),m_timer_popup(0)
+    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0)
 /*
  *
  */
 {
     ui->setupUi(this);
+
+    ui_popup->setupUi(&m_widget);
+
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
@@ -45,15 +67,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_item_dictionary->appendRow(m_item_2_2_dict);
     m_item_2_2_dict->appendRow(new QStandardItem("Dictionary_2.2.1"));
     m_item_2_2_s            = m_item_2_2_dict->index().data().toString();
-
-//    m_index = m_item_2_2_dict->index();
-//    qDebug()<<"For m_item_2_2_dict : m_index = "<<m_index;
-//    qDebug()<<"For m_item_2_2_dict : column = "<<m_index.column();
-//    qDebug()<<"For m_item_2_2_dict : row = "<<m_index.row();
-//    qDebug()<<"For m_item_2_2_dict : data = "<<m_index.data();
-//    qDebug()<<"For m_item_2_2_dict : string = "<<m_index.data().toString();
-//    m_item_2_2_s = m_item_2_2_dict->index().data().toString();
-//    qDebug()<<"m_item_2_2_s = "<<m_item_2_2_s;
 
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
@@ -179,6 +192,9 @@ void MainWindow::sql_edit_table_view(){
 
     m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
 
+    //qDebug()<<"size of m_sql_query = "<<m_sql_query->size();//Not work !!!
+     qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
+
     while(m_sql_query->next()){
         /*************************************************************************
          * "query.next()" set the current record.
@@ -266,19 +282,72 @@ void MainWindow::add_sql_data(){
 
 void MainWindow::window_popup_show(){
 /*
+ * Open a pop up window with random words every x ms.
+ *
  * (0,0) : Top left on Windows 10
  */
+    m_sql_row_count = 0;//Reset the variable.
+
+    //Move the window to an X,Y integer position.
     QPoint point_popup;
     point_popup.setX(775);
     point_popup.setY(455);
-
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
 
-    m_window_popup.line_english_set_text("english");
-    m_window_popup.line_french_set_text("français");
+    //sql query to select data in a table : --------------------------------------------------
+    //Put "m_sql_db->open()" in a methode !!!
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
 
-    m_window_popup.show();
+        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
+            QObject::tr("Unable to establish a database connection.\n"
+                        "This example needs SQLite support. Please read "
+                        "the Qt SQL driver documentation for information how "
+                        "to build it.\n\n"
+                        "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+
+    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+
+    //First, count the number of raw in the table :
+    while(m_sql_query->next()){
+        m_sql_row_count++;
+    }
+
+    m_random = QRandomGenerator::global()->bounded(m_sql_row_count - 1);
+    //qDebug()<<"m_sql_row_count = "<<m_sql_row_count<<" ; m_random = "<<m_random;
+
+    m_sql_row_count = 0;//Reset the variable for next count.
+
+    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+
+    //Then, save datas in the random row.
+    //Add words in a QStringList for a table with the words of the day :
+    while(m_sql_query->next()){
+        if(m_sql_row_count == m_random){
+            m_window_popup.line_english_set_text(m_sql_query->value(0).toString());
+            m_list_day.append(m_sql_query->value(0).toString());
+
+            m_window_popup.line_french_set_text(m_sql_query->value(1).toString());
+            m_list_day.append(m_sql_query->value(1).toString());
+
+            m_nb_of_word++;//Count the number of word for each call of the methode.
+        }
+
+        m_sql_row_count++;
+    }
+    //----------------------------------------------------------------------------------------
+
+    if(m_nb_of_word < 8){
+       m_window_popup.show();
+    }
+    else{
+        qDebug()<<"Show 8 words of the day in a table :";
+        qDebug()<<"m_list_day : "<<m_list_day;
+
+        m_nb_of_word = 0;//Rest.
+    }
 
     m_timer_popup->start(5000);
     //m_timer_popup->stop();
