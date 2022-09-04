@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow
         int16_t                     m_dict_1_column;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;
+        uint16_t                    m_sql_row_count;
         QTimer                      *m_timer_popup;
 };
 #endif // MAINWINDOW_H

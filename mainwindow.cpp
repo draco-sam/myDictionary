@@ -1,11 +1,26 @@
+/**************************************************************************************************
+ * Name of the project  : my_dictionary.
+ *
+ * Name of the creator  : Sam.
+ * Date                 : 04/09/2022
+ *
+ * Description          :
+ *
+ * Remarks              :
+ *
+ * Improvements         :
+ *  - Put sql attributes, methodes, signals and slots in a separate class file (04/09/2022).
+ *************************************************************************************************/
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QSqlRecord>
 
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow),
     ui_table_view_dict(new Ui::Table_view_dict),m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
-    m_sql_query(0),m_sql_db(0),m_timer_popup(0)
+    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_timer_popup(0)
 /*
  *
  */
@@ -45,15 +60,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     m_item_dictionary->appendRow(m_item_2_2_dict);
     m_item_2_2_dict->appendRow(new QStandardItem("Dictionary_2.2.1"));
     m_item_2_2_s            = m_item_2_2_dict->index().data().toString();
-
-//    m_index = m_item_2_2_dict->index();
-//    qDebug()<<"For m_item_2_2_dict : m_index = "<<m_index;
-//    qDebug()<<"For m_item_2_2_dict : column = "<<m_index.column();
-//    qDebug()<<"For m_item_2_2_dict : row = "<<m_index.row();
-//    qDebug()<<"For m_item_2_2_dict : data = "<<m_index.data();
-//    qDebug()<<"For m_item_2_2_dict : string = "<<m_index.data().toString();
-//    m_item_2_2_s = m_item_2_2_dict->index().data().toString();
-//    qDebug()<<"m_item_2_2_s = "<<m_item_2_2_s;
 
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
@@ -179,6 +185,9 @@ void MainWindow::sql_edit_table_view(){
 
     m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
 
+    //qDebug()<<"size of m_sql_query = "<<m_sql_query->size();//Not work !!!
+     qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
+
     while(m_sql_query->next()){
         /*************************************************************************
          * "query.next()" set the current record.
@@ -268,12 +277,26 @@ void MainWindow::window_popup_show(){
 /*
  * (0,0) : Top left on Windows 10
  */
+    //Move the window to an X,Y integer position.
     QPoint point_popup;
     point_popup.setX(775);
     point_popup.setY(455);
-
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
+
+    //sql query to select data in a table : --------------------------------------------------
+    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+
+    while(m_sql_query->next()){
+        m_modele_dict_1->setItem(m_dict_1_row,0,
+                                 new QStandardItem(m_sql_query->value(0).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,1,
+                                 new QStandardItem(m_sql_query->value(1).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,2,
+                                 new QStandardItem(m_sql_query->value(2).toString()));
+        m_sql_row_count++;
+    }
+    //----------------------------------------------------------------------------------------
 
     m_window_popup.line_english_set_text("english");
     m_window_popup.line_french_set_text("français");
