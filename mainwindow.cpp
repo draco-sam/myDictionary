@@ -112,6 +112,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
 //    m_widget_3.show();
 
+    QGridLayout *m_layout_grid_3 = new QGridLayout;
+    //m_layout_grid_3->addWidget(&m_table_view_1,0,0);
+    m_widget_3.setLayout(m_layout_grid_3);
+
     creat_widget_1();
     creat_widget_2();
 

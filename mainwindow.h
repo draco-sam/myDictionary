@@ -75,6 +75,7 @@ class MainWindow : public QMainWindow
         QTableView                  m_table_view_1;
         QGridLayout                 *m_layout_grid_1;
         QGridLayout                 *m_layout_grid_2;
+        QGridLayout                 *m_layout_grid_3;
         QLineEdit                   m_line_1;
         QLineEdit                   m_line_2;
 };
