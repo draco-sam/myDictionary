@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow
         void add_sql_data();
         void window_popup_show();
         void close_widget();
+        void widget_test();
 
 
     private:
@@ -62,5 +63,12 @@ class MainWindow : public QMainWindow
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;
+        QTimer                      *m_timer_widget;
+        QWidget                     m_widget_1;
+        QWidget                     m_widget_2;
+        QWidget                     m_widget_3;
+        QPushButton                 m_pb_1;
+        QPushButton                 m_pb_2;
+        QPushButton                 m_pb_3;
 };
 #endif // MAINWINDOW_H

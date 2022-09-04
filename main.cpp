@@ -3,6 +3,7 @@
 
 #include <QApplication>
 
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -12,16 +13,25 @@ int main(int argc, char *argv[])
     main_window.setWindowState(Qt::WindowMaximized);
     main_window.show();
 
-//    QWidget widget_pop;
+//    QWidget widget_1;
+//    QWidget widget_2;
 
-//    Ui::PopUpWindow ui_p_w;
+//    QPushButton pb_1("push",&widget_1);
+//    pb_1.setGeometry(60,50,180,70);
 
-//    ui_p_w.setupUi(&widget_pop);
-//    widget_pop.show();
+//    //QPushButton pb_2("p2",&widget_2);
+//    QPushButton pb_2("p2",&pb_1);
 
-//    TestPopUp test_pop_up;
+//    QPushButton pb_3;
+//    pb_3.setText("pb_3");
 
-//    test_pop_up.show();
+//    pb_2.setParent(&pb_3);
+
+//    pb_3.show();
+
+//    widget_1.show();
+//    //widget_2.show();
+
 
     return a.exec();
 }

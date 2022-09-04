@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
-    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0)
+    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0),
+    m_timer_widget(0)
 /*
  *
  */
@@ -90,8 +91,26 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
     m_timer_popup->start(2000);
 
+    //Test change of widget : ------------------------------------------------------
+    m_pb_1.setText("pb_1");
+    m_pb_1.setGeometry(60, 50, 180, 70);
+    m_pb_1.setParent(&m_widget_1);
 
+    m_pb_2.setText("pb_2");
+    m_pb_2.setParent(&m_widget_2);
+    m_pb_3.setText("pb_3");
+    m_pb_3.move(30,30);
+    m_pb_3.setParent(&m_widget_2);
 
+    m_widget_1.setParent(&m_widget_3);
+    m_widget_2.setParent(NULL);
+
+    m_timer_widget = new QTimer(this);
+    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
+    m_timer_widget->start(6000);
+
+    m_widget_3.show();
+    //------------------------------------------------------------------------------
 }
 
 MainWindow::~MainWindow()
@@ -361,3 +380,16 @@ void MainWindow::close_widget(){
     m_window_popup.close();
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::widget_test(){
+    //qDebug()<<"widget_test";
+
+    m_widget_1.setParent(NULL);//Remove parent.
+
+    m_widget_3.hide();
+
+    //Change the widget on the parent m_widget_3.
+    m_widget_2.setParent(&m_widget_3);
+
+    m_widget_3.show();
+}
