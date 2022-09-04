@@ -26,6 +26,8 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         void sql_edit_table_view();
+        void creat_widget_1();
+        void creat_widget_2();
 
 
     public slots:
@@ -70,5 +72,10 @@ class MainWindow : public QMainWindow
         QPushButton                 m_pb_1;
         QPushButton                 m_pb_2;
         QPushButton                 m_pb_3;
+        QTableView                  m_table_view_1;
+        QGridLayout                 *m_layout_grid_1;
+        QGridLayout                 *m_layout_grid_2;
+        QLineEdit                   m_line_1;
+        QLineEdit                   m_line_2;
 };
 #endif // MAINWINDOW_H

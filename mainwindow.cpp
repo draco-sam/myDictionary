@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
     m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0),
-    m_timer_widget(0)
+    m_timer_widget(0),
+    m_table_view_1(NULL)
 /*
  *
  */
@@ -92,18 +93,27 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_timer_popup->start(2000);
 
     //Test change of widget : ------------------------------------------------------
-    m_pb_1.setText("pb_1");
-    m_pb_1.setGeometry(60, 50, 180, 70);
-    m_pb_1.setParent(&m_widget_1);
+//    m_pb_1.setText("pb_1");
+//    m_pb_1.setGeometry(60, 50, 180, 70);
+//    m_pb_1.setParent(&m_widget_1);
 
-    m_pb_2.setText("pb_2");
-    m_pb_2.setParent(&m_widget_2);
-    m_pb_3.setText("pb_3");
-    m_pb_3.move(30,30);
-    m_pb_3.setParent(&m_widget_2);
+//    m_pb_2.setText("pb_2");
+//    m_pb_2.setParent(&m_widget_2);
+//    m_pb_3.setText("pb_3");
+//    m_pb_3.move(30,30);
+//    m_pb_3.setParent(&m_widget_2);
 
-    m_widget_1.setParent(&m_widget_3);
-    m_widget_2.setParent(NULL);
+//    m_widget_1.setParent(&m_widget_3);
+//    m_widget_2.setParent(NULL);
+
+//    m_timer_widget = new QTimer(this);
+//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
+//    m_timer_widget->start(6000);
+
+//    m_widget_3.show();
+
+    creat_widget_1();
+    creat_widget_2();
 
     m_timer_widget = new QTimer(this);
     connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
@@ -384,12 +394,49 @@ void MainWindow::close_widget(){
 void MainWindow::widget_test(){
     //qDebug()<<"widget_test";
 
-    m_widget_1.setParent(NULL);//Remove parent.
+    //m_widget_1.setParent(NULL);//Remove parent.
 
     m_widget_3.hide();
 
     //Change the widget on the parent m_widget_3.
+    m_widget_1.setParent(NULL);
     m_widget_2.setParent(&m_widget_3);
+
+    m_timer_widget->stop();
 
     m_widget_3.show();
 }
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::creat_widget_1(){
+/*
+ *
+ */
+    QGridLayout *m_layout_grid_1 = new QGridLayout;
+    m_layout_grid_1->addWidget(&m_table_view_1,0,0);
+
+    m_widget_1.setLayout(m_layout_grid_1);
+
+    m_widget_1.setParent(&m_widget_3);
+
+    //m_table_view_1.setParent(&m_widget_3);
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::creat_widget_2(){
+/*
+ *
+ */
+
+    m_line_1.setText("line_1");
+    m_line_2.setText("line_2");
+
+    QGridLayout *m_layout_grid_2 = new QGridLayout;
+
+    m_layout_grid_2->addWidget(&m_line_1,0,0);
+    m_layout_grid_2->addWidget(&m_line_2,1,0);
+
+    m_widget_2.setLayout(m_layout_grid_2);
+
+}
+//-------------------------------------------------------------------------------------------------
