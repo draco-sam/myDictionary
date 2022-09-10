@@ -39,6 +39,7 @@ class MainWindow : public QMainWindow
         void window_popup_show();
         void close_widget();
         void widget_test();
+        void change_widget();
 
 
     private:
@@ -69,13 +70,15 @@ class MainWindow : public QMainWindow
         QWidget                     m_widget_1;
         QWidget                     m_widget_2;
         QWidget                     m_widget_3;
-        QPushButton                 m_pb_1;
-        QPushButton                 m_pb_2;
-        QPushButton                 m_pb_3;
+        QWidget                     m_widget_4;
+        QPushButton                 *m_pb_1;
+        QPushButton                 *m_pb_2;
+        QPushButton                 *m_pb_3;
         QTableView                  m_table_view_1;
         QGridLayout                 *m_layout_grid_1;
         QGridLayout                 *m_layout_grid_2;
         QGridLayout                 *m_layout_grid_3;
+        QGridLayout                 *m_layout_grid_4;
         QLineEdit                   m_line_1;
         QLineEdit                   m_line_2;
 };

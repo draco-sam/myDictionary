@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 04/09/2022
+ * Date                 : 10/09/2022
  *
  * Description          :
  *
@@ -112,18 +112,44 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
 //    m_widget_3.show();
 
+    //*************************************************************************
+//    QGridLayout *m_layout_grid_3 = new QGridLayout;
+//    //m_layout_grid_3->addWidget(&m_table_view_1,0,0);
+//    m_widget_3.setLayout(m_layout_grid_3);
+
+//    creat_widget_1();
+//    creat_widget_2();
+
+//    m_timer_widget = new QTimer(this);
+//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
+//    m_timer_widget->start(6000);
+
+//    m_widget_3.show();
+    //*************************************************************************
+
+    QGridLayout *m_layout_grid_4 = new QGridLayout;
     QGridLayout *m_layout_grid_3 = new QGridLayout;
-    //m_layout_grid_3->addWidget(&m_table_view_1,0,0);
+
+//    m_pb_1.setText("pb_1");
+//    m_pb_2.setText("pb_2");
+
+    QPushButton *m_pb_1 = new QPushButton("pb_1");
+    QPushButton *m_pb_2 = new QPushButton("pb_2");
+    QPushButton *m_pb_3 = new QPushButton("pb_3");
+
+    m_layout_grid_3->addWidget(m_pb_1,0,0);
+    m_layout_grid_3->addWidget(m_pb_2,0,1);
     m_widget_3.setLayout(m_layout_grid_3);
 
-    creat_widget_1();
-    creat_widget_2();
+    m_layout_grid_4->addWidget(&m_widget_3,0,0);
+    m_layout_grid_4->addWidget(m_pb_3,0,1);
+    m_widget_4.setLayout(m_layout_grid_4);
+    m_widget_4.show();
 
     m_timer_widget = new QTimer(this);
-    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
+    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::change_widget);
     m_timer_widget->start(6000);
 
-    m_widget_3.show();
     //------------------------------------------------------------------------------
 }
 
@@ -142,6 +168,20 @@ MainWindow::~MainWindow()
     delete  ui;
 }
 
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::change_widget(){
+/*
+ *
+ */
+    //m_widget_4.close();
+    //m_layout_grid_4->removeWidget(&m_widget_3);
+    m_widget_3.hide();
+    //m_layout_grid_4->addWidget(m_pb_3,0,1);
+//    m_layout_grid_4->removeWidget(m_pb_1);
+//    m_layout_grid_4->addWidget(m_pb_3,0,0);
+//    m_widget_4.show();
+}
 //-------------------------------------------------------------------------------------------------
 
 void MainWindow::menu_bar_show_hide(bool change){
