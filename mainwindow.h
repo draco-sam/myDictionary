@@ -58,6 +58,7 @@ class MainWindow : public QMainWindow
         QString                     m_item_1_s;
         QString                     m_item_2_2_s;
         int16_t                     m_dict_1_row;
+        int16_t                     m_dict_1_row_last;
         int16_t                     m_dict_1_column;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;
@@ -66,10 +67,11 @@ class MainWindow : public QMainWindow
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;
+        uint16_t                    m_repeat_popup_ms;//In milliseconds.
         QTimer                      *m_timer_widget;
         QWidget                     m_widget_1;
         QWidget                     m_widget_2;
-        QWidget                     m_widget_3;
+        QWidget                     *m_widget_3;
         QWidget                     m_widget_4;
         QPushButton                 *m_pb_1;
         QPushButton                 *m_pb_2;

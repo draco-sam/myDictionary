@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 10/09/2022
+ * Date                 : 26/02/2023
  *
  * Description          :
  *
@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui_popup(new Ui::WindowPopUp),
 
     m_menu_right_click(0), m_modele_dictionary(0),
-    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_column(0),
-    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0),
+    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_row_last(0),m_dict_1_column(0),
+    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),
     m_timer_widget(0),
     m_table_view_1(NULL)
 /*
@@ -90,7 +90,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //First call of the pop up window with a timer :
     m_timer_popup = new QTimer(this);
     connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
-    m_timer_popup->start(2000);
+    m_timer_popup->start(m_repeat_popup_ms);
 
     //Test change of widget : ------------------------------------------------------
 //    m_pb_1.setText("pb_1");
@@ -139,9 +139,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     m_layout_grid_3->addWidget(m_pb_1,0,0);
     m_layout_grid_3->addWidget(m_pb_2,0,1);
-    m_widget_3.setLayout(m_layout_grid_3);
+    QWidget *m_widget_3 = new QWidget;
+    m_widget_3->setLayout(m_layout_grid_3);
 
-    m_layout_grid_4->addWidget(&m_widget_3,0,0);
+    m_layout_grid_4->addWidget(m_widget_3,0,0);
     m_layout_grid_4->addWidget(m_pb_3,0,1);
     m_widget_4.setLayout(m_layout_grid_4);
     m_widget_4.show();
@@ -174,9 +175,12 @@ void MainWindow::change_widget(){
 /*
  *
  */
-    //m_widget_4.close();
+    m_widget_4.close();
     //m_layout_grid_4->removeWidget(&m_widget_3);
-    m_widget_3.hide();
+    //m_widget_3->hide();
+    //delete m_widget_3;
+
+    //delete m_widget_3;
     //m_layout_grid_4->addWidget(m_pb_3,0,1);
 //    m_layout_grid_4->removeWidget(m_pb_1);
 //    m_layout_grid_4->addWidget(m_pb_3,0,0);
@@ -289,6 +293,8 @@ void MainWindow::sql_edit_table_view(){
         qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
                   " : "<<m_sql_query->value(2).toString();
     }
+    m_dict_1_row_last = m_dict_1_row;
+    m_dict_1_row = 0;//Reset for next open of the table view.
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -306,7 +312,7 @@ void MainWindow::add_sql_data(){
     word_french     = ui_table_view_dict->line_edit_french->text();
     date_s          = ui_table_view_dict->line_edit_date->text();
 
-    id_num_s        = QString::number(m_dict_1_row + 1);
+    id_num_s        = QString::number(m_dict_1_row_last + 1);
 
 //    query_s + id_num_s + ",'" + word_english + "','" + word_french + "','" + date_s + "')";
     query_s.append(id_num_s);
@@ -338,13 +344,13 @@ void MainWindow::add_sql_data(){
          *************************************************************************/
         m_sql_query->last();
 
-        m_modele_dict_1->setItem(m_dict_1_row,0,
+        m_modele_dict_1->setItem(m_dict_1_row_last,0,
                                  new QStandardItem(m_sql_query->value(0).toString()));
-        m_modele_dict_1->setItem(m_dict_1_row,1,
+        m_modele_dict_1->setItem(m_dict_1_row_last,1,
                                  new QStandardItem(m_sql_query->value(1).toString()));
-        m_modele_dict_1->setItem(m_dict_1_row,2,
+        m_modele_dict_1->setItem(m_dict_1_row_last,2,
                                  new QStandardItem(m_sql_query->value(2).toString()));
-        m_dict_1_row++;
+        m_dict_1_row_last++;
 
         qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
                   " : "<<m_sql_query->value(2).toString();
@@ -440,15 +446,15 @@ void MainWindow::widget_test(){
 
     //m_widget_1.setParent(NULL);//Remove parent.
 
-    m_widget_3.hide();
+//    m_widget_3.hide();
 
-    //Change the widget on the parent m_widget_3.
-    m_widget_1.setParent(NULL);
-    m_widget_2.setParent(&m_widget_3);
+//    //Change the widget on the parent m_widget_3.
+//    m_widget_1.setParent(NULL);
+//    m_widget_2.setParent(&m_widget_3);
 
-    m_timer_widget->stop();
+//    m_timer_widget->stop();
 
-    m_widget_3.show();
+//    m_widget_3.show();
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -456,12 +462,12 @@ void MainWindow::creat_widget_1(){
 /*
  *
  */
-    QGridLayout *m_layout_grid_1 = new QGridLayout;
-    m_layout_grid_1->addWidget(&m_table_view_1,0,0);
+//    QGridLayout *m_layout_grid_1 = new QGridLayout;
+//    m_layout_grid_1->addWidget(&m_table_view_1,0,0);
 
-    m_widget_1.setLayout(m_layout_grid_1);
+//    m_widget_1.setLayout(m_layout_grid_1);
 
-    m_widget_1.setParent(&m_widget_3);
+//    m_widget_1.setParent(&m_widget_3);
 
     //m_table_view_1.setParent(&m_widget_3);
 }
