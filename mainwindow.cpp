@@ -23,10 +23,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui_popup(new Ui::WindowPopUp),
 
     m_menu_right_click(0), m_modele_dictionary(0),
-    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_row_last(0),m_dict_1_column(0),
-    m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),
-    m_timer_widget(0),
-    m_table_view_1(NULL)
+    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_row_last(0),
+    m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),
+    m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),m_timer_widget(0),m_table_view_1(NULL)
 /*
  *
  */
@@ -127,25 +126,25 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 //    m_widget_3.show();
     //*************************************************************************
 
-    QGridLayout *m_layout_grid_4 = new QGridLayout;
-    QGridLayout *m_layout_grid_3 = new QGridLayout;
+//    QGridLayout *m_layout_grid_4 = new QGridLayout;
+//    QGridLayout *m_layout_grid_3 = new QGridLayout;
 
-//    m_pb_1.setText("pb_1");
-//    m_pb_2.setText("pb_2");
+////    m_pb_1.setText("pb_1");
+////    m_pb_2.setText("pb_2");
 
-    QPushButton *m_pb_1 = new QPushButton("pb_1");
-    QPushButton *m_pb_2 = new QPushButton("pb_2");
-    QPushButton *m_pb_3 = new QPushButton("pb_3");
+//    QPushButton *m_pb_1 = new QPushButton("pb_1");
+//    QPushButton *m_pb_2 = new QPushButton("pb_2");
+//    QPushButton *m_pb_3 = new QPushButton("pb_3");
 
-    m_layout_grid_3->addWidget(m_pb_1,0,0);
-    m_layout_grid_3->addWidget(m_pb_2,0,1);
-    QWidget *m_widget_3 = new QWidget;
-    m_widget_3->setLayout(m_layout_grid_3);
+//    m_layout_grid_3->addWidget(m_pb_1,0,0);
+//    m_layout_grid_3->addWidget(m_pb_2,0,1);
+//    QWidget *m_widget_3 = new QWidget;
+//    m_widget_3->setLayout(m_layout_grid_3);
 
-    m_layout_grid_4->addWidget(m_widget_3,0,0);
-    m_layout_grid_4->addWidget(m_pb_3,0,1);
-    m_widget_4.setLayout(m_layout_grid_4);
-    m_widget_4.show();
+//    m_layout_grid_4->addWidget(m_widget_3,0,0);
+//    m_layout_grid_4->addWidget(m_pb_3,0,1);
+//    m_widget_4.setLayout(m_layout_grid_4);
+//    m_widget_4.show();
 
     m_timer_widget = new QTimer(this);
     connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::change_widget);
@@ -369,7 +368,7 @@ void MainWindow::window_popup_show(){
 
     //Move the window to an X,Y integer position.
     QPoint point_popup;
-    point_popup.setX(775);
+    point_popup.setX(950);
     point_popup.setY(455);
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
@@ -428,8 +427,16 @@ void MainWindow::window_popup_show(){
         m_nb_of_word = 0;//Rest.
     }
 
-    m_timer_popup->start(5000);
-    //m_timer_popup->stop();
+    //Change the repeat time after the 1st appearance : --------
+    if(m_popup_f_first_time == 0){
+        set_time_repeat_popup(6000000);//10 min.
+        m_popup_f_first_time = 1;
+    }
+    else{
+        m_timer_popup->start(m_repeat_popup_ms);
+        //m_timer_popup->stop();
+    }
+    //----------------------------------------------------------
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -487,6 +494,18 @@ void MainWindow::creat_widget_2(){
     m_layout_grid_2->addWidget(&m_line_2,1,0);
 
     m_widget_2.setLayout(m_layout_grid_2);
+
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::set_time_repeat_popup(uint32_t time_ms){
+/*
+ * Set the time to repeat the appearance of the popup window.
+ */
+    m_repeat_popup_ms = time_ms;
+
+    //m_timer_popup->stop();
+    m_timer_popup->start(m_repeat_popup_ms);
 
 }
 //-------------------------------------------------------------------------------------------------

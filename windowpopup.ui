@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>500</height>
+    <width>300</width>
+    <height>200</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>350</width>
-    <height>200</height>
+    <width>200</width>
+    <height>100</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -40,11 +40,17 @@
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="line_french">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="minimumSize">
         <size>
          <width>100</width>
          <height>0</height>
         </size>
+       </property>
+       <property name="mouseTracking">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -85,6 +91,12 @@
        </item>
        <item>
         <widget class="QToolButton" name="tool_configure">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>100</height>
+          </size>
+         </property>
          <property name="text">
           <string>t</string>
          </property>

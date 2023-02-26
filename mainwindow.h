@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow
         void sql_edit_table_view();
         void creat_widget_1();
         void creat_widget_2();
+        void set_time_repeat_popup(uint32_t time_ms);
 
 
     public slots:
@@ -67,7 +68,8 @@ class MainWindow : public QMainWindow
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;
-        uint16_t                    m_repeat_popup_ms;//In milliseconds.
+        uint32_t                    m_repeat_popup_ms;//In milliseconds.
+        uint8_t                     m_popup_f_first_time;//Flag.
         QTimer                      *m_timer_widget;
         QWidget                     m_widget_1;
         QWidget                     m_widget_2;
