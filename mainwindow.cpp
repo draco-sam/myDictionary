@@ -429,7 +429,7 @@ void MainWindow::window_popup_show(){
 
     //Change the repeat time after the 1st appearance : --------
     if(m_popup_f_first_time == 0){
-        set_time_repeat_popup(6000000);//10 min.
+        set_time_repeat_popup(600e3);//10 min.
         m_popup_f_first_time = 1;
     }
     else{
