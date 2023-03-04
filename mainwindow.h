@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow
         void dict_table_view_open();
         void dict_item_double_clicked(QModelIndex index);
         void config_table_view_dict();
+        void config_table_dict_main_window();
         void add_sql_data();
         void window_popup_show();
         void close_widget();
@@ -50,7 +51,8 @@ class MainWindow : public QMainWindow
         WindowPopUp                 m_window_popup;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
-        QStandardItemModel          *m_modele_dict_1;
+        QStandardItemModel          *m_modele_dict_1;//old modele.
+        QStandardItemModel          *m_model_dict_2;//New for main window.
         QStandardItem               *m_item_dictionary;
         QStandardItem               *m_item_1_1_dict;
         QStandardItem               *m_item_2_2_dict;
@@ -65,6 +67,8 @@ class MainWindow : public QMainWindow
         QSqlDatabase                *m_sql_db;
         uint16_t                    m_sql_row_count;
         uint16_t                    m_random;
+        uint8_t                     m_f_frequency;//Flag.
+        uint8_t                     m_frequency;
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;

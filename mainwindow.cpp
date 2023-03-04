@@ -2,13 +2,17 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 26/02/2023
+ * Date                 : 04/03/2023
  *
  * Description          :
  *
  * Remarks              :
  *
  * Improvements         :
+ *  - List of dictionary on the left area of the main window.
+ *  - Table view at the center of the main window.
+ *  - Popup window show words of the day when mouse cross window.
+ *
  *  - Put sql attributes, methodes, signals and slots in a separate class file (04/09/2022).
  *  - Show the QStringList in construction (during the day) when the mouse passes over the window.
  *************************************************************************************************/
@@ -23,9 +27,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui_popup(new Ui::WindowPopUp),
 
     m_menu_right_click(0), m_modele_dictionary(0),
-    m_modele_dict_1(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_row_last(0),
-    m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_nb_of_word(0),
-    m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),m_timer_widget(0),m_table_view_1(NULL)
+    m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_row_last(0),
+    m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
+    m_frequency(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),
+    m_timer_widget(0),m_table_view_1(NULL)
 /*
  *
  */
@@ -41,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //ui->dockWidget_2->hide();
 
     config_table_view_dict();
+    config_table_dict_main_window();
 
     m_menu_right_click = new QMenu("test",this);
     m_menu_right_click->addMenu("test");
@@ -234,18 +240,35 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
 
 void MainWindow::config_table_view_dict(){
 /*
+ * !!! old methode !!!
  * Tabe View dictionary that will contain words in a sql database.
  */
     ui_table_view_dict->setupUi(&m_widget_dict_1);
     m_widget_dict_1.setWindowState(Qt::WindowMaximized);
 
-    QStringList horizontal_header_labels = {"English","Français","date"};
+    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","date"};
 
     m_modele_dict_1 = new QStandardItemModel(10,3);
     m_modele_dict_1->setHorizontalHeaderLabels(horizontal_header_labels);
     m_modele_dict_1->setItem(4,1, new QStandardItem("Sam dic 1"));
 
     ui_table_view_dict->tableView->setModel(m_modele_dict_1);
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::config_table_dict_main_window(){
+/*
+ * !!! New methode !!!
+ * Tabe View dictionary that will contain words in the sql database.
+ */
+    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","Date"};
+
+    m_model_dict_2 = new QStandardItemModel(10,5);//(lines, columns).
+    m_model_dict_2->setHorizontalHeaderLabels(horizontal_header_labels);
+    m_model_dict_2->setItem(4,1, new QStandardItem("Test to write"));// To write in a cell.
+
+    ui->table_data_base->setModel(m_model_dict_2);
+
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -266,7 +289,7 @@ void MainWindow::sql_edit_table_view(){
                         "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+    m_sql_query->exec("SELECT english, french, family, frequency,date FROM dictionary_1");
 
     //qDebug()<<"size of m_sql_query = "<<m_sql_query->size();//Not work !!!
      qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
@@ -287,10 +310,17 @@ void MainWindow::sql_edit_table_view(){
                                  new QStandardItem(m_sql_query->value(1).toString()));
         m_modele_dict_1->setItem(m_dict_1_row,2,
                                  new QStandardItem(m_sql_query->value(2).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,3,
+                                 new QStandardItem(m_sql_query->value(3).toString()));
+        m_modele_dict_1->setItem(m_dict_1_row,4,
+                                 new QStandardItem(m_sql_query->value(4).toString()));
+
         m_dict_1_row++;
 
         qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
-                  " : "<<m_sql_query->value(2).toString();
+                  " : "<<m_sql_query->value(2).toString()<<
+                  " : "<<m_sql_query->value(3).toString()<<
+                  " : "<<m_sql_query->value(4).toString();
     }
     m_dict_1_row_last = m_dict_1_row;
     m_dict_1_row = 0;//Reset for next open of the table view.
@@ -392,13 +422,12 @@ void MainWindow::window_popup_show(){
     while(m_sql_query->next()){
         m_sql_row_count++;
     }
-
     m_random = QRandomGenerator::global()->bounded(m_sql_row_count - 1);
     //qDebug()<<"m_sql_row_count = "<<m_sql_row_count<<" ; m_random = "<<m_random;
 
     m_sql_row_count = 0;//Reset the variable for next count.
 
-    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+    m_sql_query->exec("SELECT english, french, frequency FROM dictionary_1");
 
     //Then, save datas in the random row.
     //Add words in a QStringList for a table with the words of the day :
@@ -410,6 +439,9 @@ void MainWindow::window_popup_show(){
             m_window_popup.line_french_set_text(m_sql_query->value(1).toString());
             m_list_day.append(m_sql_query->value(1).toString());
 
+            m_window_popup.line_frequency_set_text("Frequency : " + m_sql_query->value(2).toString());
+            m_frequency = m_sql_query->value(2).toInt();//Save the number of the frequency.
+
             m_nb_of_word++;//Count the number of word for each call of the methode.
         }
 
@@ -417,7 +449,7 @@ void MainWindow::window_popup_show(){
     }
     //----------------------------------------------------------------------------------------
 
-    if(m_nb_of_word < 8){
+    if(m_nb_of_word < 30){
        m_window_popup.show();
     }
     else{
@@ -427,15 +459,38 @@ void MainWindow::window_popup_show(){
         m_nb_of_word = 0;//Rest.
     }
 
+    //show one time words with low frequency : ------------------------------------------
+    //and another time with high frequency
+    if(m_f_frequency == 0){// ok if <= 5.
+        if(m_frequency >= 6){// nok.
+            set_time_repeat_popup(100);//Resart timer because wrong frequency number.
+        }
+        else{// <=5 : ok, set the flag only if right frequency number.
+            m_f_frequency = 1;//Set flag.
+            set_time_repeat_popup(900e3);//15 min.
+        }
+    }
+    else{//m_f_frequency = 1.
+        if(m_frequency <= 5){//nok.
+            set_time_repeat_popup(100);//Resart timer because wrong frequency number.
+        }
+        else{//ok.
+            m_f_frequency = 0;//Reset flag.
+            set_time_repeat_popup(900e3);//15 min.
+        }
+    }
+    //-----------------------------------------------------------------------------------
+
     //Change the repeat time after the 1st appearance : --------
     if(m_popup_f_first_time == 0){
-        set_time_repeat_popup(600e3);//10 min.
+        set_time_repeat_popup(900e3);//900e3 : 15 min.
         m_popup_f_first_time = 1;
     }
-    else{
-        m_timer_popup->start(m_repeat_popup_ms);
-        //m_timer_popup->stop();
-    }
+    m_timer_popup->start(m_repeat_popup_ms);
+//    else{
+//        m_timer_popup->start(m_repeat_popup_ms);
+//        //m_timer_popup->stop();
+//    }
     //----------------------------------------------------------
 }
 //-------------------------------------------------------------------------------------------------

@@ -29,3 +29,13 @@ void WindowPopUp::line_french_set_text(QString text){
     ui->line_french->setText(text);
 }
 //-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::line_frequency_set_text(QString text){
+/*
+ *
+ */
+    ui->line_frequency->setText(text);
+}
+//-------------------------------------------------------------------------------------------------
+
+
