@@ -39,6 +39,7 @@ class MainWindow : public QMainWindow
         void config_table_view_dict();
         void config_table_dict_main_window();
         void add_sql_data();
+        void main_add_sql_data();
         void window_popup_show();
         void close_widget();
         void widget_test();

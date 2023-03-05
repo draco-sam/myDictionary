@@ -84,6 +84,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
 
+    connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
+
 
 
     //sql test : ----------------------------------------------------------------------------------
@@ -337,10 +339,67 @@ void MainWindow::item_2_edit_table(){
 //                  " : "<<m_sql_query->value(4).toString();
     }
 
+    //Add one empty row at the end (just row and QStandardItem parameter).
+    m_model_dict_2->setItem(m_dict_2_row,new QStandardItem(""));
+
+    //Test to read text in a specific row and column.
+    qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
+
+
+
+    //m_dict_2_row++;//Not necessary ???
+
     m_dict_2_row_last = m_dict_2_row;
     m_dict_2_row = 0;//Reset for next open of the table view.
+
+    m_sql_db->close();
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::main_add_sql_data(){
+/*
+ *
+ */
+    QString id_num_s        = "";
+    QString word_english    = "";
+    QString word_french     = "";
+    QString family_s        = "";
+    QString frequency_s     = "";
+    QString visibility_s    = "";
+    QString date_s          = "";
+    QString query_s         = "INSERT INTO dictionary_1 (id,english,french)"
+                              "VALUE (?,?,?)";
+
+    word_english    = m_model_dict_2->item(m_dict_2_row_last,0)->text();
+    word_french     = m_model_dict_2->item(m_dict_2_row_last,1)->text();
+
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
+    }
+
+//    m_sql_query->prepare("INSERT INTO dictionary_1 (id,english,french)"
+//                         "VALUES (?,?,?);");
+//    m_sql_query->addBindValue(18);
+//    m_sql_query->addBindValue("yesss");
+//    m_sql_query->addBindValue("oussi");
+
+    m_sql_query->prepare("INSERT INTO dictionary_1 (id,english,french)"
+                         "VALUES (?,?,?);");
+    m_sql_query->addBindValue(m_dict_2_row_last + 1);
+    m_sql_query->addBindValue(word_english);
+    m_sql_query->addBindValue(word_french);
+
+    if(!m_sql_query->exec()){
+        qDebug()<<" adding new value in data base with exec() NOK";
+    }
+    else{
+        qDebug()<<"exec() : OK";
+    }
+
+    //Add one empty row at the end (just row and QStandardItem parameter) :
+    m_dict_2_row_last++;
+    m_model_dict_2->setItem(m_dict_2_row_last,new QStandardItem(""));
+}
 
 void MainWindow::sql_edit_table_view(){
 /*
