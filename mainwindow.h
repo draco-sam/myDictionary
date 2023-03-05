@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         void sql_edit_table_view();
+        void item_2_edit_table();
         void creat_widget_1();
         void creat_widget_2();
         void set_time_repeat_popup(uint32_t time_ms);
@@ -59,9 +60,12 @@ class MainWindow : public QMainWindow
         QWidget                     m_widget;
         QWidget                     m_widget_dict_1;
         QString                     m_item_1_s;
+        QString                     m_item_2_s;
         QString                     m_item_2_2_s;
         int16_t                     m_dict_1_row;
+        int16_t                     m_dict_2_row;
         int16_t                     m_dict_1_row_last;
+        int16_t                     m_dict_2_row_last;
         int16_t                     m_dict_1_column;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;

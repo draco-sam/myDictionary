@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 04/03/2023
+ * Date                 : 05/03/2023
  *
  * Description          :
  *
@@ -27,7 +27,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui_popup(new Ui::WindowPopUp),
 
     m_menu_right_click(0), m_modele_dictionary(0),
-    m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_dict_1_row(0),m_dict_1_row_last(0),
+    m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_item_2_s(""),
+    m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
     m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
     m_frequency(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),
     m_timer_widget(0),m_table_view_1(NULL)
@@ -46,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //ui->dockWidget_2->hide();
 
     config_table_view_dict();
-    config_table_dict_main_window();
 
     m_menu_right_click = new QMenu("test",this);
     m_menu_right_click->addMenu("test");
@@ -66,8 +66,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     m_item_dictionary->appendRow(new QStandardItem("Dictionary_1.2"));
 
-    m_item_dictionary       = new QStandardItem("Dictionary_2");
+    m_item_dictionary = new QStandardItem("Dictionary_2");
     m_modele_dictionary->appendRow(m_item_dictionary);
+    m_item_2_s = m_item_dictionary->index().data().toString();
     m_item_dictionary->appendRow(new QStandardItem("Dictionary_2.1"));
 
     m_item_2_2_dict         = new QStandardItem("Dictionary_2.2");
@@ -91,6 +92,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     m_sql_query = new QSqlQuery(*m_sql_db);
     //---------------------------------------------------------------------------------------------
+
+    //Configure table view on the main window.
+    config_table_dict_main_window();
 
     //First call of the pop up window with a timer :
     m_timer_popup = new QTimer(this);
@@ -221,14 +225,21 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
  */
     //qDebug()<<"index = "<<index;
 
-    qDebug()<<"index.data().toString() = "<<index.data().toString();
-    qDebug()<<"m_item_1_s = "<<m_item_1_s;
+    qDebug()<<"Double click on item = "<<index.data().toString();
+
 
     //Check if the string of the index is "Dictionary_2.2".
     //If yes, open another GUI.
     if(index.data().toString() == m_item_1_s){
+        qDebug()<<"m_item_1_s = "<<m_item_1_s;
+
         sql_edit_table_view();
         m_widget_dict_1.show();
+    }
+    else if(index.data().toString() == m_item_2_s){
+        qDebug()<<"m_item_2_s = "<<m_item_2_s;
+
+        item_2_edit_table();
     }
     else if(index.data().toString() == m_item_2_2_s){
         m_widget.show();
@@ -265,10 +276,67 @@ void MainWindow::config_table_dict_main_window(){
 
     m_model_dict_2 = new QStandardItemModel(10,5);//(lines, columns).
     m_model_dict_2->setHorizontalHeaderLabels(horizontal_header_labels);
-    m_model_dict_2->setItem(4,1, new QStandardItem("Test to write"));// To write in a cell.
+
+    //Example to write in a cell.
+    m_model_dict_2->setItem(4,1, new QStandardItem("Test to write"));
 
     ui->table_data_base->setModel(m_model_dict_2);
+}
+//-------------------------------------------------------------------------------------------------
 
+void MainWindow::item_2_edit_table(){
+/*
+ * On the main window, when double click on item 2, on the tree list, edit the table view
+ * with sql data.
+ *
+ * ??? db.close() ???
+ */
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
+
+        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
+            QObject::tr("Unable to establish a database connection.\n"
+                        "This example needs SQLite support. Please read "
+                        "the Qt SQL driver documentation for information how "
+                        "to build it.\n\n"
+                        "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+
+    m_sql_query->exec("SELECT english, french, family, frequency,date FROM dictionary_1");
+
+    qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
+
+    while(m_sql_query->next()){
+        /*************************************************************************
+         * "query.next()" set the current record.
+         *
+         * The index of the "query.value(...)" return the field of the command
+         * "SELECT firstname, lastname FROM person".
+         *
+         * The filed are numbered from left (0) to right (1).
+         *************************************************************************/
+
+        m_model_dict_2->setItem(m_dict_2_row,0,
+                                 new QStandardItem(m_sql_query->value(0).toString()));
+        m_model_dict_2->setItem(m_dict_2_row,1,
+                                 new QStandardItem(m_sql_query->value(1).toString()));
+        m_model_dict_2->setItem(m_dict_2_row,2,
+                                 new QStandardItem(m_sql_query->value(2).toString()));
+        m_model_dict_2->setItem(m_dict_2_row,3,
+                                 new QStandardItem(m_sql_query->value(3).toString()));
+        m_model_dict_2->setItem(m_dict_2_row,4,
+                                 new QStandardItem(m_sql_query->value(4).toString()));
+
+        m_dict_2_row++;
+
+//        qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
+//                  " : "<<m_sql_query->value(2).toString()<<
+//                  " : "<<m_sql_query->value(3).toString()<<
+//                  " : "<<m_sql_query->value(4).toString();
+    }
+
+    m_dict_2_row_last = m_dict_2_row;
+    m_dict_2_row = 0;//Reset for next open of the table view.
 }
 //-------------------------------------------------------------------------------------------------
 
