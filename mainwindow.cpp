@@ -272,9 +272,9 @@ void MainWindow::config_table_dict_main_window(){
  * !!! New methode !!!
  * Tabe View dictionary that will contain words in the sql database.
  */
-    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","Date"};
+    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","Visibility","Date"};
 
-    m_model_dict_2 = new QStandardItemModel(10,5);//(lines, columns).
+    m_model_dict_2 = new QStandardItemModel(10,6);//(lines, columns).
     m_model_dict_2->setHorizontalHeaderLabels(horizontal_header_labels);
 
     //Example to write in a cell.
@@ -302,7 +302,7 @@ void MainWindow::item_2_edit_table(){
                         "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    m_sql_query->exec("SELECT english, french, family, frequency,date FROM dictionary_1");
+    m_sql_query->exec("SELECT english, french, family, frequency, visibility, date FROM dictionary_1");
 
     qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
 
@@ -326,6 +326,8 @@ void MainWindow::item_2_edit_table(){
                                  new QStandardItem(m_sql_query->value(3).toString()));
         m_model_dict_2->setItem(m_dict_2_row,4,
                                  new QStandardItem(m_sql_query->value(4).toString()));
+        m_model_dict_2->setItem(m_dict_2_row,5,
+                                 new QStandardItem(m_sql_query->value(5).toString()));
 
         m_dict_2_row++;
 
