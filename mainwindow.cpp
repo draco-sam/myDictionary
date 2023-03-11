@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 05/03/2023
+ * Date                 : 10/03/2023
  *
  * Description          :
  *
@@ -90,6 +90,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     //sql test : ----------------------------------------------------------------------------------
     m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+    //m_sql_db->setDatabaseName("release/dictionary_1.db");
     m_sql_db->setDatabaseName("dictionary_1.db");
 
     m_sql_query = new QSqlQuery(*m_sql_db);
@@ -158,9 +159,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 //    m_widget_4.setLayout(m_layout_grid_4);
 //    m_widget_4.show();
 
-    m_timer_widget = new QTimer(this);
-    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::change_widget);
-    m_timer_widget->start(6000);
+//    m_timer_widget = new QTimer(this);
+//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::change_widget);
+//    m_timer_widget->start(6000);
 
     //------------------------------------------------------------------------------
 }
@@ -283,6 +284,9 @@ void MainWindow::config_table_dict_main_window(){
     m_model_dict_2->setItem(4,1, new QStandardItem("Test to write"));
 
     ui->table_data_base->setModel(m_model_dict_2);
+
+    //At start-up of the main window, edit directly the table.
+    item_2_edit_table();
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -339,8 +343,17 @@ void MainWindow::item_2_edit_table(){
 //                  " : "<<m_sql_query->value(4).toString();
     }
 
-    //Add one empty row at the end (just row and QStandardItem parameter).
+    //Add one empty row at the end (just row and QStandardItem parameter) : -------------
     m_model_dict_2->setItem(m_dict_2_row,new QStandardItem(""));
+
+    uint8_t i_column = 0;
+
+    //Set with empty string each column
+    //otherwise, the code will crash when we click on main add button.
+    for(i_column=0 ; i_column < 6 ; i_column++){
+        m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(""));
+    }
+    //-----------------------------------------------------------------------------------
 
     //Test to read text in a specific row and column.
     qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
@@ -364,30 +377,48 @@ void MainWindow::main_add_sql_data(){
     QString word_english    = "";
     QString word_french     = "";
     QString family_s        = "";
-    QString frequency_s     = "";
-    QString visibility_s    = "";
+    uint8_t frequency       = 0;
+    uint8_t visibility      = 1;//0 = do not display, 1 = display.
     QString date_s          = "";
-    QString query_s         = "INSERT INTO dictionary_1 (id,english,french)"
-                              "VALUE (?,?,?)";
+    /*QString query_s         = "INSERT INTO dictionary_1 (id,english,french)"
+                              "VALUE (?,?,?)";*/
 
     word_english    = m_model_dict_2->item(m_dict_2_row_last,0)->text();
     word_french     = m_model_dict_2->item(m_dict_2_row_last,1)->text();
+    family_s        = m_model_dict_2->item(m_dict_2_row_last,2)->text();
+    date_s          = m_model_dict_2->item(m_dict_2_row_last,5)->text();
+
+    //Check if frequency or visibility fields are empty : --------------------------
+    if(m_model_dict_2->item(m_dict_2_row_last,3)->text() == "")
+    {
+        frequency = 0;
+    }
+    else{
+        frequency = m_model_dict_2->item(m_dict_2_row_last,3)->text().toInt();
+    }
+
+    if(m_model_dict_2->item(m_dict_2_row_last,4)->text() == ""){
+        visibility = 1;
+    }
+    else{
+        visibility = m_model_dict_2->item(m_dict_2_row_last,4)->text().toInt();
+    }
+    //-------------------------------------------------------------------------------
 
     if (!m_sql_db->open()) {
         qDebug()<<"Cannot open database";
     }
 
-//    m_sql_query->prepare("INSERT INTO dictionary_1 (id,english,french)"
-//                         "VALUES (?,?,?);");
-//    m_sql_query->addBindValue(18);
-//    m_sql_query->addBindValue("yesss");
-//    m_sql_query->addBindValue("oussi");
+    m_sql_query->prepare("INSERT INTO dictionary_1 (id,english,french,family,frequency,visibility,date)"
+                         "VALUES (?,?,?,?,?,?,?);");
 
-    m_sql_query->prepare("INSERT INTO dictionary_1 (id,english,french)"
-                         "VALUES (?,?,?);");
     m_sql_query->addBindValue(m_dict_2_row_last + 1);
     m_sql_query->addBindValue(word_english);
     m_sql_query->addBindValue(word_french);
+    m_sql_query->addBindValue(family_s);
+    m_sql_query->addBindValue(frequency);
+    m_sql_query->addBindValue(visibility);
+    m_sql_query->addBindValue(date_s);
 
     if(!m_sql_query->exec()){
         qDebug()<<" adding new value in data base with exec() NOK";
