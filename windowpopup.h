@@ -16,6 +16,7 @@ public:
     ~WindowPopUp();
     void line_english_set_text(QString text);
     void line_french_set_text(QString text);
+    void line_frequency_set_text(QString text);
 
 private:
     Ui::WindowPopUp *ui;
