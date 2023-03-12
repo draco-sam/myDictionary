@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 11/03/2023
+ * Date                 : 12/03/2023
  *
  * Description          :
  *
@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
-    connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
+
     //ui->dockWidget_2->hide();
 
     config_table_view_dict();
@@ -79,15 +79,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
 
-    //Open a specific dictionary when we do a double click on any one items :
-    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
-
-    connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
-
-    connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
-
-
-
     //sql test : ----------------------------------------------------------------------------------
     m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
     //m_sql_db->setDatabaseName("release/dictionary_1.db");
@@ -101,75 +92,31 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     //First call of the pop up window with a timer :
     m_timer_popup = new QTimer(this);
+
+    //Connection between objects : ---------------------------------------------------------------------
+    connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
+
+    //Open a specific dictionary when we do a double click on any one items.
+    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
+
+    connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
+
+    connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
+
     connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
+
+
+    //--------------------------------------------------------------------------------------------------
+
     m_timer_popup->start(m_repeat_popup_ms);
-
-    //Test change of widget : ------------------------------------------------------
-//    m_pb_1.setText("pb_1");
-//    m_pb_1.setGeometry(60, 50, 180, 70);
-//    m_pb_1.setParent(&m_widget_1);
-
-//    m_pb_2.setText("pb_2");
-//    m_pb_2.setParent(&m_widget_2);
-//    m_pb_3.setText("pb_3");
-//    m_pb_3.move(30,30);
-//    m_pb_3.setParent(&m_widget_2);
-
-//    m_widget_1.setParent(&m_widget_3);
-//    m_widget_2.setParent(NULL);
-
-//    m_timer_widget = new QTimer(this);
-//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
-//    m_timer_widget->start(6000);
-
-//    m_widget_3.show();
-
-    //*************************************************************************
-//    QGridLayout *m_layout_grid_3 = new QGridLayout;
-//    //m_layout_grid_3->addWidget(&m_table_view_1,0,0);
-//    m_widget_3.setLayout(m_layout_grid_3);
-
-//    creat_widget_1();
-//    creat_widget_2();
-
-//    m_timer_widget = new QTimer(this);
-//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
-//    m_timer_widget->start(6000);
-
-//    m_widget_3.show();
-    //*************************************************************************
-
-//    QGridLayout *m_layout_grid_4 = new QGridLayout;
-//    QGridLayout *m_layout_grid_3 = new QGridLayout;
-
-////    m_pb_1.setText("pb_1");
-////    m_pb_2.setText("pb_2");
-
-//    QPushButton *m_pb_1 = new QPushButton("pb_1");
-//    QPushButton *m_pb_2 = new QPushButton("pb_2");
-//    QPushButton *m_pb_3 = new QPushButton("pb_3");
-
-//    m_layout_grid_3->addWidget(m_pb_1,0,0);
-//    m_layout_grid_3->addWidget(m_pb_2,0,1);
-//    QWidget *m_widget_3 = new QWidget;
-//    m_widget_3->setLayout(m_layout_grid_3);
-
-//    m_layout_grid_4->addWidget(m_widget_3,0,0);
-//    m_layout_grid_4->addWidget(m_pb_3,0,1);
-//    m_widget_4.setLayout(m_layout_grid_4);
-//    m_widget_4.show();
-
-//    m_timer_widget = new QTimer(this);
-//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::change_widget);
-//    m_timer_widget->start(6000);
-
-    //------------------------------------------------------------------------------
 }
 
 MainWindow::~MainWindow()
 {
     //qDebug()<<"!!! destructor !!!"<<m_window_popup.close();
     qDebug()<<"!!! destructor !!!";
+
+    m_window_popup.close();
 
     //m_window_popup.hide();
 
@@ -555,11 +502,12 @@ void MainWindow::window_popup_show(){
  * (0,0) : Top left on Windows 10
  */
     m_sql_row_count = 0;//Reset the variable.
+    QString path = "";
 
     //Move the window to an X,Y integer position.
     QPoint point_popup;
-    point_popup.setX(950);
-    point_popup.setY(455);
+    point_popup.setX(650);//old : 950.
+    point_popup.setY(150);//old : 455.
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
 
@@ -576,18 +524,21 @@ void MainWindow::window_popup_show(){
                         "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+    //First, count the number of raw in the table : ------------
+    //Need just one column label.
+    m_sql_query->exec("SELECT id FROM dictionary_1");
 
-    //First, count the number of raw in the table :
     while(m_sql_query->next()){
         m_sql_row_count++;
     }
+    //----------------------------------------------------------
+
     m_random = QRandomGenerator::global()->bounded(m_sql_row_count - 1);
     //qDebug()<<"m_sql_row_count = "<<m_sql_row_count<<" ; m_random = "<<m_random;
 
     m_sql_row_count = 0;//Reset the variable for next count.
 
-    m_sql_query->exec("SELECT english, french, frequency FROM dictionary_1");
+    m_sql_query->exec("SELECT english, french, frequency, image FROM dictionary_1");
 
     //Then, save datas in the random row.
     //Add words in a QStringList for a table with the words of the day :
@@ -602,6 +553,8 @@ void MainWindow::window_popup_show(){
             m_window_popup.line_frequency_set_text("Frequency : " + m_sql_query->value(2).toString());
             m_frequency = m_sql_query->value(2).toInt();//Save the number of the frequency.
 
+            path = m_sql_query->value(3).toString();
+
             m_nb_of_word++;//Count the number of word for each call of the methode.
         }
 
@@ -610,7 +563,9 @@ void MainWindow::window_popup_show(){
     //----------------------------------------------------------------------------------------
 
     if(m_nb_of_word < 30){
-       m_window_popup.show();
+        //m_window_popup.set_label_image("Images/workshop_03.jpg");
+        m_window_popup.set_label_image(path);
+        m_window_popup.show();
     }
     else{
         qDebug()<<"Show 8 words of the day in a table :";
@@ -640,6 +595,10 @@ void MainWindow::window_popup_show(){
         }
     }
     //-----------------------------------------------------------------------------------
+
+
+
+
 
     //Change the repeat time after the 1st appearance : --------
     if(m_popup_f_first_time == 0){
