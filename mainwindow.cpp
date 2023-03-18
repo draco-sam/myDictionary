@@ -21,6 +21,7 @@
 #include "ui_mainwindow.h"
 #include "ui_windowpopup.h"
 
+
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui(new Ui::MainWindow),ui_table_view_dict(new Ui::Table_view_dict),
@@ -30,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_item_2_s(""),
     m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
     m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
-    m_frequency(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),
-    m_timer_widget(0),m_table_view_1(NULL)
+    m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_f_same(0),
+    m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),
+    m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time()
 /*
  *
  */
@@ -104,9 +106,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
 
     connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
-
-
     //--------------------------------------------------------------------------------------------------
+
+    //Test to get the time of the system : -----------
+    m_time = m_time.currentTime();
+
+    qDebug()<<"time = "<<m_time.currentTime();
+    qDebug()<<"hour = "<<m_time.hour();
+    //------------------------------------------------
 
     m_timer_popup->start(m_repeat_popup_ms);
 }
@@ -368,10 +375,10 @@ void MainWindow::main_add_sql_data(){
     m_sql_query->addBindValue(date_s);
 
     if(!m_sql_query->exec()){
-        qDebug()<<" adding new value in data base with exec() NOK";
+        qDebug()<<" adding new value in data base with exec() : NOK";
     }
     else{
-        qDebug()<<"exec() : OK";
+        qDebug()<<"adding new value in data : OK";
     }
 
     //Add one empty row at the end (just row and QStandardItem parameter) :
@@ -504,12 +511,15 @@ void MainWindow::window_popup_show(){
     m_sql_row_count = 0;//Reset the variable.
     QString path = "";
 
-    //Move the window to an X,Y integer position.
+    m_window_popup.close();
+
+    //Move the window to an X,Y integer position : -----------------------
     QPoint point_popup;
     point_popup.setX(650);//old : 950.
     point_popup.setY(150);//old : 455.
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
+    //--------------------------------------------------------------------
 
     //sql query to select data in a table : --------------------------------------------------
     //Put "m_sql_db->open()" in a methode !!!
@@ -526,12 +536,27 @@ void MainWindow::window_popup_show(){
 
     //First, count the number of raw in the table : ------------
     //Need just one column label.
-    m_sql_query->exec("SELECT id FROM dictionary_1");
+    m_sql_query->exec("SELECT frequency FROM dictionary_1");
 
     while(m_sql_query->next()){
+        //qDebug()<<m_sql_query->value(0).toString().toInt();
+
         m_sql_row_count++;
     }
     //----------------------------------------------------------
+
+    //Check if the number of words in the list of the day : -------------------
+    //is larger then the number of words in the sql base.
+    QStringList list;
+
+    if(m_list_day.size() >= m_sql_row_count){
+        m_list_day = list;
+
+        qDebug()<<"Reset of m_list_day, m_list_day.size() = "<<
+                  m_list_day.size()<<"m_sql_row_count = "<<m_sql_row_count;
+
+    }
+    //-------------------------------------------------------------------------
 
     m_random = QRandomGenerator::global()->bounded(m_sql_row_count - 1);
     //qDebug()<<"m_sql_row_count = "<<m_sql_row_count<<" ; m_random = "<<m_random;
@@ -544,13 +569,11 @@ void MainWindow::window_popup_show(){
     //Add words in a QStringList for a table with the words of the day :
     while(m_sql_query->next()){
         if(m_sql_row_count == m_random){
-            m_window_popup.line_english_set_text(m_sql_query->value(0).toString());
-            m_list_day.append(m_sql_query->value(0).toString());
+            m_word_english = m_sql_query->value(0).toString();
 
-            m_window_popup.line_french_set_text(m_sql_query->value(1).toString());
-            m_list_day.append(m_sql_query->value(1).toString());
+            m_word_french = m_sql_query->value(1).toString();
 
-            m_window_popup.line_frequency_set_text("Frequency : " + m_sql_query->value(2).toString());
+            m_frequency_s = m_sql_query->value(2).toString();
             m_frequency = m_sql_query->value(2).toInt();//Save the number of the frequency.
 
             path = m_sql_query->value(3).toString();
@@ -564,53 +587,101 @@ void MainWindow::window_popup_show(){
 
     if(m_nb_of_word < 30){
         //m_window_popup.set_label_image("Images/workshop_03.jpg");
-        m_window_popup.set_label_image(path);
-        m_window_popup.show();
+        //m_window_popup.set_label_image(path);
+        //m_window_popup.show();
     }
     else{
-        qDebug()<<"Show 8 words of the day in a table :";
-        qDebug()<<"m_list_day : "<<m_list_day;
+        //qDebug()<<"Show 8 words of the day in a table :";
+        //qDebug()<<"m_list_day : "<<m_list_day;
 
         m_nb_of_word = 0;//Rest.
     }
 
-    //show one time words with low frequency : ------------------------------------------
-    //and another time with high frequency
-    if(m_f_frequency == 0){// ok if <= 5.
-        if(m_frequency >= 6){// nok.
-            set_time_repeat_popup(100);//Resart timer because wrong frequency number.
+    //Check if the random word already appeared today : --------------------------------------
+    uint16_t i_for = 0;
+
+    for(i_for=0 ; i_for < m_list_day.size() ; i_for++){
+        if(m_list_day[i_for] == m_word_english){
+            m_word_f_same++;
         }
-        else{// <=5 : ok, set the flag only if right frequency number.
-            m_f_frequency = 1;//Set flag.
-            set_time_repeat_popup(900e3);//15 min.
-        }
-    }
-    else{//m_f_frequency = 1.
-        if(m_frequency <= 5){//nok.
-            set_time_repeat_popup(100);//Resart timer because wrong frequency number.
-        }
-        else{//ok.
-            m_f_frequency = 0;//Reset flag.
-            set_time_repeat_popup(900e3);//15 min.
+        else{
+            i_for++;//English words during odd numbers.
         }
     }
-    //-----------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
 
-
-
-
-
-    //Change the repeat time after the 1st appearance : --------
-    if(m_popup_f_first_time == 0){
-        set_time_repeat_popup(900e3);//900e3 : 15 min.
-        m_popup_f_first_time = 1;
+    //Show high frequency at the beginning of the day : --------------------------------------
+    //And lower the frequency during the day.
+    //
+    //Skip these tests if the english word already appear.
+    if(m_word_f_same == 0){
+        if(m_time.hour() <= 9){//1st hour.
+            if(m_frequency >= 8){
+                m_popup_f_show = 1;//We can show the pop up window.
+            }
+        }
+        else if(m_time.hour() <= 10){
+            if(m_frequency >= 7){
+                m_popup_f_show = 1;//We can show the pop up window.
+            }
+        }
+        else if(m_time.hour() <= 15){
+            if(m_frequency >= 6){
+                m_popup_f_show = 1;//We can show the pop up window.
+            }
+        }
+        else{
+            m_popup_f_show = 1;//We can show the pop up window.
+        }
     }
-    m_timer_popup->start(m_repeat_popup_ms);
-//    else{
-//        m_timer_popup->start(m_repeat_popup_ms);
-//        //m_timer_popup->stop();
-//    }
-    //----------------------------------------------------------
+    else if(m_word_f_same <= 5){
+
+        qDebug()<<"!!! Same word !!! : "<<m_word_f_same<<" : english = "<<m_word_english<<" ; french = "
+               <<m_word_french;
+    }
+    else{//m_word_f_same > 5 :
+        m_word_f_same = 0;//Reset for next call of the methode.
+
+        //After a few try, show anyway the words.
+        m_popup_f_show = 1;
+    }
+    //----------------------------------------------------------------------------------------
+
+    if(m_popup_f_show == 1){
+        qDebug()<<m_time.currentTime()<<" : english = "<<m_word_english<<" ; french = "<<m_word_french<<" ; f = "<<m_frequency<<
+                  "; path = "<<path;
+
+        m_list_day.append(m_word_english);
+        m_list_day.append(m_word_french);
+
+        //For test !!! : -------------------------------------------------
+        if(m_list_day.size() > 2){
+            m_window_popup.plain_text_show_hide(PLAIN_TEXT_SHOW);
+        }
+        //----------------------------------------------------------------
+
+
+
+        set_time_repeat_popup(900e3);//15 min.
+        m_popup_f_show = 0;//Reset.
+
+        m_window_popup.line_english_set_text(m_word_english);
+        m_window_popup.line_french_set_text(m_word_french);
+        m_window_popup.line_frequency_set_text("Frequency : " + m_frequency_s);
+        m_window_popup.set_label_english(m_word_english);
+        m_window_popup.set_label_image(path);
+        //path = "";//Reset.
+
+        m_window_popup.show();
+    }
+    else{
+        m_word_english = "";//Reset.
+        m_word_french = "";//Reset.
+
+        set_time_repeat_popup(100);//Resart timer because wrong frequency number.
+    }
+
+
 }
 //-------------------------------------------------------------------------------------------------
 
