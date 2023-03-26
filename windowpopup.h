@@ -25,6 +25,7 @@ class WindowPopUp : public QWidget
         void set_label_english(QString text);
         void set_label_image(QString path);
         void plain_text_show_hide(uint8_t show_hide);
+        void plain_add_text(QString text);
 
     private:
         Ui::WindowPopUp     *ui;

@@ -79,7 +79,8 @@ class MainWindow : public QMainWindow
         QString                     m_frequency_s;
         QString                     m_word_english;
         QString                     m_word_french;
-        uint8_t                     m_word_f_same;//Flag for same word.
+        uint8_t                     m_word_same_f;//Flag for same word.
+        uint8_t                     m_word_same_counter;
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;

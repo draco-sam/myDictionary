@@ -20,6 +20,8 @@ WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
     //Hide plain text at start-up.
     //Show only after x words.
     ui->plain_text->hide();
+
+    //ui->plain_text
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -91,5 +93,13 @@ void WindowPopUp::plain_text_show_hide(uint8_t show_hide){
     else if(show_hide == PLAIN_TEXT_HIDE){
         ui->plain_text->hide();
     }
+}
+//-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::plain_add_text(QString text){
+/*
+ *
+ */
+    ui->plain_text->appendPlainText(text);
 }
 //-------------------------------------------------------------------------------------------------

@@ -31,9 +31,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_item_2_s(""),
     m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
     m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
-    m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_f_same(0),
-    m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),
-    m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time()
+    m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
+    m_word_same_counter(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),
+    m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time()
 /*
  *
  */
@@ -570,7 +570,6 @@ void MainWindow::window_popup_show(){
     while(m_sql_query->next()){
         if(m_sql_row_count == m_random){
             m_word_english = m_sql_query->value(0).toString();
-
             m_word_french = m_sql_query->value(1).toString();
 
             m_frequency_s = m_sql_query->value(2).toString();
@@ -602,7 +601,7 @@ void MainWindow::window_popup_show(){
 
     for(i_for=0 ; i_for < m_list_day.size() ; i_for++){
         if(m_list_day[i_for] == m_word_english){
-            m_word_f_same++;
+            m_word_same_f = 1;
         }
         else{
             i_for++;//English words during odd numbers.
@@ -614,18 +613,8 @@ void MainWindow::window_popup_show(){
     //And lower the frequency during the day.
     //
     //Skip these tests if the english word already appear.
-    if(m_word_f_same == 0){
-        if(m_time.hour() <= 9){//1st hour.
-            if(m_frequency >= 8){
-                m_popup_f_show = 1;//We can show the pop up window.
-            }
-        }
-        else if(m_time.hour() <= 10){
-            if(m_frequency >= 7){
-                m_popup_f_show = 1;//We can show the pop up window.
-            }
-        }
-        else if(m_time.hour() <= 15){
+    if(m_word_same_f == 0){
+        if(m_time.hour() <= 12){//1st hour.
             if(m_frequency >= 6){
                 m_popup_f_show = 1;//We can show the pop up window.
             }
@@ -634,17 +623,32 @@ void MainWindow::window_popup_show(){
             m_popup_f_show = 1;//We can show the pop up window.
         }
     }
-    else if(m_word_f_same <= 5){
+    else if(m_word_same_f == 1){//m_word_same_f <= 4
+        m_word_same_f = 0;//Reset flag.
+        m_word_same_counter++;
 
-        qDebug()<<"!!! Same word !!! : "<<m_word_f_same<<" : english = "<<m_word_english<<" ; french = "
+        qDebug()<<"!!! Same word !!! : "<<m_word_same_counter<<" : english = "<<m_word_english<<" ; french = "
                <<m_word_french;
-    }
-    else{//m_word_f_same > 5 :
-        m_word_f_same = 0;//Reset for next call of the methode.
 
-        //After a few try, show anyway the words.
-        m_popup_f_show = 1;
+        if(m_word_same_counter > 4){
+            qDebug()<<"m_word_same_f > 4 : "<<m_word_same_f<<" : english = "<<m_word_english<<" ; french = "
+                   <<m_word_french<<" ; frequency = "<<m_frequency_s;
+
+            //m_word_same_counter = 0;//Reset.
+
+            //After a few try, show anyway the words.
+            m_popup_f_show = 1;
+        }
     }
+//    else{//m_word_same_f > 4 :
+//        qDebug()<<"m_word_same_f > 4 : "<<m_word_same_f<<" : english = "<<m_word_english<<" ; french = "
+//               <<m_word_french<<" ; frequency = "<<m_frequency_s;
+
+//        m_word_same_f = 0;//Reset for next call of the methode.
+
+//        //After a few try, show anyway the words.
+//        m_popup_f_show = 1;
+//    }
     //----------------------------------------------------------------------------------------
 
     if(m_popup_f_show == 1){
@@ -654,16 +658,21 @@ void MainWindow::window_popup_show(){
         m_list_day.append(m_word_english);
         m_list_day.append(m_word_french);
 
-        //For test !!! : -------------------------------------------------
-        if(m_list_day.size() > 2){
+        m_window_popup.plain_add_text(m_word_english + " : " + m_word_french);
+
+        //For test !!! : ---------------------------------------------------------------------
+        if(m_list_day.size() >= 18){//18
             m_window_popup.plain_text_show_hide(PLAIN_TEXT_SHOW);
         }
-        //----------------------------------------------------------------
+        //------------------------------------------------------------------------------------
 
 
 
         set_time_repeat_popup(900e3);//15 min.
         m_popup_f_show = 0;//Reset.
+
+        //Test !!!
+        m_word_same_counter = 0;//Reset.
 
         m_window_popup.line_english_set_text(m_word_english);
         m_window_popup.line_french_set_text(m_word_french);
