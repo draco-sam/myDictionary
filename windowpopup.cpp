@@ -1,8 +1,23 @@
+/**************************************************************************************************
+ * Name of the project  : my_dictionary.
+ *
+ * Name of the creator  : Sam.
+ * Date                 : 04/08/2023
+ *
+ * Description          :
+ *
+ * Remarks              :
+ *
+ * Improvements         :
+ *
+ *************************************************************************************************/
+
 #include "windowpopup.h"
 #include "ui_windowpopup.h"
 
 WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
-    ui(new Ui::WindowPopUp),m_pix("Images/workshop.jpg")
+    ui(new Ui::WindowPopUp),m_pix("Images/workshop.jpg"),m_line_french_is_selected(0),
+    m_line_english_is_selected(0)
 {
     ui->setupUi(this);
 
@@ -21,7 +36,10 @@ WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
     //Show only after x words.
     ui->plain_text->hide();
 
-    //ui->plain_text
+    //Connection between objects :
+    connect(ui->line_french, &QLineEdit::selectionChanged, this, &WindowPopUp::line_french_selected);
+    connect(ui->line_english, &QLineEdit::selectionChanged, this, &WindowPopUp::line_english_selected);
+    connect(ui->line_french, &QLineEdit::returnPressed, this, &WindowPopUp::line_french_enter_pressed);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -101,5 +119,35 @@ void WindowPopUp::plain_add_text(QString text){
  *
  */
     ui->plain_text->appendPlainText(text);
+}
+//-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::line_french_selected(){
+/*
+ * Tis slot is called when the signal "void QLineEdit::selectionChanged()" is emitted.
+ *
+ * We need to double click en the QlineEdit to emitted the signal.
+ */
+    qDebug()<<"line_french_selected()";
+}
+//-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::line_english_selected(){
+/*
+ * Tis slot is called when the signal "void QLineEdit::selectionChanged()" is emitted.
+ *
+ * We need to double click en the QlineEdit to emitted the signal.
+ */
+    qDebug()<<"line_english_selected()";
+}
+//-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::line_french_enter_pressed(){
+/*
+ * Tis slot is called when the signal "..." is emitted.
+ *
+ * We need to select (one click, not double click) the QLineEdit and then push to ENTER.
+ */
+    qDebug()<<"line_french_enter_pressed()";
 }
 //-------------------------------------------------------------------------------------------------

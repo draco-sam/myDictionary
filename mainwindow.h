@@ -32,13 +32,15 @@ class MainWindow : public QMainWindow
         void creat_widget_1();
         void creat_widget_2();
         void set_time_repeat_popup(uint32_t time_ms);
+        void send_config(uint8_t config);
 
+    signals:
+        void send_config_signal(uint8_t config);
 
     public slots:
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
         void dict_item_double_clicked(QModelIndex index);
-        void config_table_view_dict();
         void config_table_dict_main_window();
         void add_sql_data();
         void main_add_sql_data();

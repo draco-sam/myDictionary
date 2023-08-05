@@ -27,9 +27,16 @@ class WindowPopUp : public QWidget
         void plain_text_show_hide(uint8_t show_hide);
         void plain_add_text(QString text);
 
+    public slots:
+        void line_french_selected();
+        void line_english_selected();
+        void line_french_enter_pressed();
+
     private:
         Ui::WindowPopUp     *ui;
         QPixmap             m_pix;
+        uint8_t             m_line_french_is_selected;
+        uint8_t             m_line_english_is_selected;
 };
 
 #endif // WINDOWPOPUP_H

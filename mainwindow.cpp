@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 12/03/2023
+ * Date                 : 05/08/2023
  *
  * Description          :
  *
@@ -47,8 +47,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //ui->checkBox->toggled();
 
     //ui->dockWidget_2->hide();
-
-    config_table_view_dict();
 
     m_menu_right_click = new QMenu("test",this);
     m_menu_right_click->addMenu("test");
@@ -101,7 +99,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //Open a specific dictionary when we do a double click on any one items.
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
-    connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
+    //!!! this connection crash the software (05/08/2023) !!!
+    //connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
+    //qDebug()<<"After connect with pb_add";
 
     connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
 
@@ -169,7 +169,7 @@ void MainWindow::menu_bar_show_hide(bool change){
 
 void MainWindow::dict_table_view_open(){
 /*
- *
+ * Only for test ???
  */
     m_widget.show();
 }
@@ -201,26 +201,6 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
     else if(index.data().toString() == m_item_2_2_s){
         m_widget.show();
     }
-
-
-}
-//-------------------------------------------------------------------------------------------------
-
-void MainWindow::config_table_view_dict(){
-/*
- * !!! old methode !!!
- * Tabe View dictionary that will contain words in a sql database.
- */
-    ui_table_view_dict->setupUi(&m_widget_dict_1);
-    m_widget_dict_1.setWindowState(Qt::WindowMaximized);
-
-    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","date"};
-
-    m_modele_dict_1 = new QStandardItemModel(10,3);
-    m_modele_dict_1->setHorizontalHeaderLabels(horizontal_header_labels);
-    m_modele_dict_1->setItem(4,1, new QStandardItem("Sam dic 1"));
-
-    ui_table_view_dict->tableView->setModel(m_modele_dict_1);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -509,14 +489,14 @@ void MainWindow::window_popup_show(){
  * (0,0) : Top left on Windows 10
  */
     m_sql_row_count = 0;//Reset the variable.
-    QString path = "";
+    QString image_path = "";
 
     m_window_popup.close();
 
     //Move the window to an X,Y integer position : -----------------------
     QPoint point_popup;
-    point_popup.setX(650);//old : 950.
-    point_popup.setY(150);//old : 455.
+    point_popup.setX(20);//old : 650 or 950.
+    point_popup.setY(150);//old : 150 or 455.
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
     //--------------------------------------------------------------------
@@ -575,7 +555,7 @@ void MainWindow::window_popup_show(){
             m_frequency_s = m_sql_query->value(2).toString();
             m_frequency = m_sql_query->value(2).toInt();//Save the number of the frequency.
 
-            path = m_sql_query->value(3).toString();
+            image_path = m_sql_query->value(3).toString();
 
             m_nb_of_word++;//Count the number of word for each call of the methode.
         }
@@ -586,7 +566,7 @@ void MainWindow::window_popup_show(){
 
     if(m_nb_of_word < 30){
         //m_window_popup.set_label_image("Images/workshop_03.jpg");
-        //m_window_popup.set_label_image(path);
+        //m_window_popup.set_label_image(image_path);
         //m_window_popup.show();
     }
     else{
@@ -653,7 +633,7 @@ void MainWindow::window_popup_show(){
 
     if(m_popup_f_show == 1){
         qDebug()<<m_time.currentTime()<<" : english = "<<m_word_english<<" ; french = "<<m_word_french<<" ; f = "<<m_frequency<<
-                  "; path = "<<path;
+                  "; image_path = "<<image_path;
 
         m_list_day.append(m_word_english);
         m_list_day.append(m_word_french);
@@ -678,8 +658,8 @@ void MainWindow::window_popup_show(){
         m_window_popup.line_french_set_text(m_word_french);
         m_window_popup.line_frequency_set_text("Frequency : " + m_frequency_s);
         m_window_popup.set_label_english(m_word_english);
-        m_window_popup.set_label_image(path);
-        //path = "";//Reset.
+        m_window_popup.set_label_image(image_path);
+        //image_path = "";//Reset.
 
         m_window_popup.show();
     }
@@ -763,3 +743,16 @@ void MainWindow::set_time_repeat_popup(uint32_t time_ms){
 
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::send_config(uint8_t config){
+/*
+ *
+ */
+    emit send_config_signal(config);
+}
+//-------------------------------------------------------------------------------------------------
+
+
+
+
+

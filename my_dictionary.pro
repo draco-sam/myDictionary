@@ -13,10 +13,12 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
+    sql_data_base.cpp \
     windowpopup.cpp
 
 HEADERS += \
     mainwindow.h \
+    sql_data_base.h \
     windowpopup.h
 
 FORMS += \
