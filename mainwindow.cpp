@@ -2,7 +2,7 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 11/03/2023
+ * Date                 : 05/08/2023
  *
  * Description          :
  *
@@ -21,6 +21,7 @@
 #include "ui_mainwindow.h"
 #include "ui_windowpopup.h"
 
+
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui(new Ui::MainWindow),ui_table_view_dict(new Ui::Table_view_dict),
@@ -30,8 +31,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_item_2_s(""),
     m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
     m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
-    m_frequency(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),m_popup_f_first_time(0),
-    m_timer_widget(0),m_table_view_1(NULL)
+    m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
+    m_word_same_counter(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),
+    m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time()
 /*
  *
  */
@@ -43,10 +45,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
-    connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
-    //ui->dockWidget_2->hide();
 
-    config_table_view_dict();
+    //ui->dockWidget_2->hide();
 
     m_menu_right_click = new QMenu("test",this);
     m_menu_right_click->addMenu("test");
@@ -79,15 +79,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
 
-    //Open a specific dictionary when we do a double click on any one items :
-    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
-
-    connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
-
-    connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
-
-
-
     //sql test : ----------------------------------------------------------------------------------
     m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
     //m_sql_db->setDatabaseName("release/dictionary_1.db");
@@ -101,75 +92,38 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     //First call of the pop up window with a timer :
     m_timer_popup = new QTimer(this);
+
+    //Connection between objects : ---------------------------------------------------------------------
+    connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
+
+    //Open a specific dictionary when we do a double click on any one items.
+    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
+
+    //!!! this connection crash the software (05/08/2023) !!!
+    //connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
+    //qDebug()<<"After connect with pb_add";
+
+    connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
+
     connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
+    //--------------------------------------------------------------------------------------------------
+
+    //Test to get the time of the system : -----------
+    m_time = m_time.currentTime();
+
+    qDebug()<<"time = "<<m_time.currentTime();
+    qDebug()<<"hour = "<<m_time.hour();
+    //------------------------------------------------
+
     m_timer_popup->start(m_repeat_popup_ms);
-
-    //Test change of widget : ------------------------------------------------------
-//    m_pb_1.setText("pb_1");
-//    m_pb_1.setGeometry(60, 50, 180, 70);
-//    m_pb_1.setParent(&m_widget_1);
-
-//    m_pb_2.setText("pb_2");
-//    m_pb_2.setParent(&m_widget_2);
-//    m_pb_3.setText("pb_3");
-//    m_pb_3.move(30,30);
-//    m_pb_3.setParent(&m_widget_2);
-
-//    m_widget_1.setParent(&m_widget_3);
-//    m_widget_2.setParent(NULL);
-
-//    m_timer_widget = new QTimer(this);
-//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
-//    m_timer_widget->start(6000);
-
-//    m_widget_3.show();
-
-    //*************************************************************************
-//    QGridLayout *m_layout_grid_3 = new QGridLayout;
-//    //m_layout_grid_3->addWidget(&m_table_view_1,0,0);
-//    m_widget_3.setLayout(m_layout_grid_3);
-
-//    creat_widget_1();
-//    creat_widget_2();
-
-//    m_timer_widget = new QTimer(this);
-//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::widget_test);
-//    m_timer_widget->start(6000);
-
-//    m_widget_3.show();
-    //*************************************************************************
-
-//    QGridLayout *m_layout_grid_4 = new QGridLayout;
-//    QGridLayout *m_layout_grid_3 = new QGridLayout;
-
-////    m_pb_1.setText("pb_1");
-////    m_pb_2.setText("pb_2");
-
-//    QPushButton *m_pb_1 = new QPushButton("pb_1");
-//    QPushButton *m_pb_2 = new QPushButton("pb_2");
-//    QPushButton *m_pb_3 = new QPushButton("pb_3");
-
-//    m_layout_grid_3->addWidget(m_pb_1,0,0);
-//    m_layout_grid_3->addWidget(m_pb_2,0,1);
-//    QWidget *m_widget_3 = new QWidget;
-//    m_widget_3->setLayout(m_layout_grid_3);
-
-//    m_layout_grid_4->addWidget(m_widget_3,0,0);
-//    m_layout_grid_4->addWidget(m_pb_3,0,1);
-//    m_widget_4.setLayout(m_layout_grid_4);
-//    m_widget_4.show();
-
-//    m_timer_widget = new QTimer(this);
-//    connect(m_timer_widget, &QTimer::timeout, this, &MainWindow::change_widget);
-//    m_timer_widget->start(6000);
-
-    //------------------------------------------------------------------------------
 }
 
 MainWindow::~MainWindow()
 {
     //qDebug()<<"!!! destructor !!!"<<m_window_popup.close();
     qDebug()<<"!!! destructor !!!";
+
+    m_window_popup.close();
 
     //m_window_popup.hide();
 
@@ -215,7 +169,7 @@ void MainWindow::menu_bar_show_hide(bool change){
 
 void MainWindow::dict_table_view_open(){
 /*
- *
+ * Only for test ???
  */
     m_widget.show();
 }
@@ -247,26 +201,6 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
     else if(index.data().toString() == m_item_2_2_s){
         m_widget.show();
     }
-
-
-}
-//-------------------------------------------------------------------------------------------------
-
-void MainWindow::config_table_view_dict(){
-/*
- * !!! old methode !!!
- * Tabe View dictionary that will contain words in a sql database.
- */
-    ui_table_view_dict->setupUi(&m_widget_dict_1);
-    m_widget_dict_1.setWindowState(Qt::WindowMaximized);
-
-    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","date"};
-
-    m_modele_dict_1 = new QStandardItemModel(10,3);
-    m_modele_dict_1->setHorizontalHeaderLabels(horizontal_header_labels);
-    m_modele_dict_1->setItem(4,1, new QStandardItem("Sam dic 1"));
-
-    ui_table_view_dict->tableView->setModel(m_modele_dict_1);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -421,10 +355,10 @@ void MainWindow::main_add_sql_data(){
     m_sql_query->addBindValue(date_s);
 
     if(!m_sql_query->exec()){
-        qDebug()<<" adding new value in data base with exec() NOK";
+        qDebug()<<" adding new value in data base with exec() : NOK";
     }
     else{
-        qDebug()<<"exec() : OK";
+        qDebug()<<"adding new value in data : OK";
     }
 
     //Add one empty row at the end (just row and QStandardItem parameter) :
@@ -555,13 +489,17 @@ void MainWindow::window_popup_show(){
  * (0,0) : Top left on Windows 10
  */
     m_sql_row_count = 0;//Reset the variable.
+    QString image_path = "";
 
-    //Move the window to an X,Y integer position.
+    m_window_popup.close();
+
+    //Move the window to an X,Y integer position : -----------------------
     QPoint point_popup;
-    point_popup.setX(950);
-    point_popup.setY(455);
+    point_popup.setX(20);//old : 650 or 950.
+    point_popup.setY(150);//old : 150 or 455.
     m_window_popup.move(point_popup);
     m_window_popup.setWindowState(Qt::WindowState::WindowActive);
+    //--------------------------------------------------------------------
 
     //sql query to select data in a table : --------------------------------------------------
     //Put "m_sql_db->open()" in a methode !!!
@@ -576,31 +514,48 @@ void MainWindow::window_popup_show(){
                         "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    m_sql_query->exec("SELECT english, french, date FROM dictionary_1");
+    //First, count the number of raw in the table : ------------
+    //Need just one column label.
+    m_sql_query->exec("SELECT frequency FROM dictionary_1");
 
-    //First, count the number of raw in the table :
     while(m_sql_query->next()){
+        //qDebug()<<m_sql_query->value(0).toString().toInt();
+
         m_sql_row_count++;
     }
+    //----------------------------------------------------------
+
+    //Check if the number of words in the list of the day : -------------------
+    //is larger then the number of words in the sql base.
+    QStringList list;
+
+    if(m_list_day.size() >= m_sql_row_count){
+        m_list_day = list;
+
+        qDebug()<<"Reset of m_list_day, m_list_day.size() = "<<
+                  m_list_day.size()<<"m_sql_row_count = "<<m_sql_row_count;
+
+    }
+    //-------------------------------------------------------------------------
+
     m_random = QRandomGenerator::global()->bounded(m_sql_row_count - 1);
     //qDebug()<<"m_sql_row_count = "<<m_sql_row_count<<" ; m_random = "<<m_random;
 
     m_sql_row_count = 0;//Reset the variable for next count.
 
-    m_sql_query->exec("SELECT english, french, frequency FROM dictionary_1");
+    m_sql_query->exec("SELECT english, french, frequency, image FROM dictionary_1");
 
     //Then, save datas in the random row.
     //Add words in a QStringList for a table with the words of the day :
     while(m_sql_query->next()){
         if(m_sql_row_count == m_random){
-            m_window_popup.line_english_set_text(m_sql_query->value(0).toString());
-            m_list_day.append(m_sql_query->value(0).toString());
+            m_word_english = m_sql_query->value(0).toString();
+            m_word_french = m_sql_query->value(1).toString();
 
-            m_window_popup.line_french_set_text(m_sql_query->value(1).toString());
-            m_list_day.append(m_sql_query->value(1).toString());
-
-            m_window_popup.line_frequency_set_text("Frequency : " + m_sql_query->value(2).toString());
+            m_frequency_s = m_sql_query->value(2).toString();
             m_frequency = m_sql_query->value(2).toInt();//Save the number of the frequency.
+
+            image_path = m_sql_query->value(3).toString();
 
             m_nb_of_word++;//Count the number of word for each call of the methode.
         }
@@ -610,48 +565,112 @@ void MainWindow::window_popup_show(){
     //----------------------------------------------------------------------------------------
 
     if(m_nb_of_word < 30){
-       m_window_popup.show();
+        //m_window_popup.set_label_image("Images/workshop_03.jpg");
+        //m_window_popup.set_label_image(image_path);
+        //m_window_popup.show();
     }
     else{
-        qDebug()<<"Show 8 words of the day in a table :";
-        qDebug()<<"m_list_day : "<<m_list_day;
+        //qDebug()<<"Show 8 words of the day in a table :";
+        //qDebug()<<"m_list_day : "<<m_list_day;
 
         m_nb_of_word = 0;//Rest.
     }
 
-    //show one time words with low frequency : ------------------------------------------
-    //and another time with high frequency
-    if(m_f_frequency == 0){// ok if <= 5.
-        if(m_frequency >= 6){// nok.
-            set_time_repeat_popup(100);//Resart timer because wrong frequency number.
-        }
-        else{// <=5 : ok, set the flag only if right frequency number.
-            m_f_frequency = 1;//Set flag.
-            set_time_repeat_popup(900e3);//15 min.
-        }
-    }
-    else{//m_f_frequency = 1.
-        if(m_frequency <= 5){//nok.
-            set_time_repeat_popup(100);//Resart timer because wrong frequency number.
-        }
-        else{//ok.
-            m_f_frequency = 0;//Reset flag.
-            set_time_repeat_popup(900e3);//15 min.
-        }
-    }
-    //-----------------------------------------------------------------------------------
+    //Check if the random word already appeared today : --------------------------------------
+    uint16_t i_for = 0;
 
-    //Change the repeat time after the 1st appearance : --------
-    if(m_popup_f_first_time == 0){
-        set_time_repeat_popup(900e3);//900e3 : 15 min.
-        m_popup_f_first_time = 1;
+    for(i_for=0 ; i_for < m_list_day.size() ; i_for++){
+        if(m_list_day[i_for] == m_word_english){
+            m_word_same_f = 1;
+        }
+        else{
+            i_for++;//English words during odd numbers.
+        }
     }
-    m_timer_popup->start(m_repeat_popup_ms);
-//    else{
-//        m_timer_popup->start(m_repeat_popup_ms);
-//        //m_timer_popup->stop();
+    //----------------------------------------------------------------------------------------
+
+    //Show high frequency at the beginning of the day : --------------------------------------
+    //And lower the frequency during the day.
+    //
+    //Skip these tests if the english word already appear.
+    if(m_word_same_f == 0){
+        if(m_time.hour() <= 12){//1st hour.
+            if(m_frequency >= 6){
+                m_popup_f_show = 1;//We can show the pop up window.
+            }
+        }
+        else{
+            m_popup_f_show = 1;//We can show the pop up window.
+        }
+    }
+    else if(m_word_same_f == 1){//m_word_same_f <= 4
+        m_word_same_f = 0;//Reset flag.
+        m_word_same_counter++;
+
+        qDebug()<<"!!! Same word !!! : "<<m_word_same_counter<<" : english = "<<m_word_english<<" ; french = "
+               <<m_word_french;
+
+        if(m_word_same_counter > 4){
+            qDebug()<<"m_word_same_f > 4 : "<<m_word_same_f<<" : english = "<<m_word_english<<" ; french = "
+                   <<m_word_french<<" ; frequency = "<<m_frequency_s;
+
+            //m_word_same_counter = 0;//Reset.
+
+            //After a few try, show anyway the words.
+            m_popup_f_show = 1;
+        }
+    }
+//    else{//m_word_same_f > 4 :
+//        qDebug()<<"m_word_same_f > 4 : "<<m_word_same_f<<" : english = "<<m_word_english<<" ; french = "
+//               <<m_word_french<<" ; frequency = "<<m_frequency_s;
+
+//        m_word_same_f = 0;//Reset for next call of the methode.
+
+//        //After a few try, show anyway the words.
+//        m_popup_f_show = 1;
 //    }
-    //----------------------------------------------------------
+    //----------------------------------------------------------------------------------------
+
+    if(m_popup_f_show == 1){
+        qDebug()<<m_time.currentTime()<<" : english = "<<m_word_english<<" ; french = "<<m_word_french<<" ; f = "<<m_frequency<<
+                  "; image_path = "<<image_path;
+
+        m_list_day.append(m_word_english);
+        m_list_day.append(m_word_french);
+
+        m_window_popup.plain_add_text(m_word_english + " : " + m_word_french);
+
+        //For test !!! : ---------------------------------------------------------------------
+        if(m_list_day.size() >= 18){//18
+            m_window_popup.plain_text_show_hide(PLAIN_TEXT_SHOW);
+        }
+        //------------------------------------------------------------------------------------
+
+
+
+        set_time_repeat_popup(900e3);//15 min.
+        m_popup_f_show = 0;//Reset.
+
+        //Test !!!
+        m_word_same_counter = 0;//Reset.
+
+        m_window_popup.line_english_set_text(m_word_english);
+        m_window_popup.line_french_set_text(m_word_french);
+        m_window_popup.line_frequency_set_text("Frequency : " + m_frequency_s);
+        m_window_popup.set_label_english(m_word_english);
+        m_window_popup.set_label_image(image_path);
+        //image_path = "";//Reset.
+
+        m_window_popup.show();
+    }
+    else{
+        m_word_english = "";//Reset.
+        m_word_french = "";//Reset.
+
+        set_time_repeat_popup(100);//Resart timer because wrong frequency number.
+    }
+
+
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -724,3 +743,16 @@ void MainWindow::set_time_repeat_popup(uint32_t time_ms){
 
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::send_config(uint8_t config){
+/*
+ *
+ */
+    emit send_config_signal(config);
+}
+//-------------------------------------------------------------------------------------------------
+
+
+
+
+

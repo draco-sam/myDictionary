@@ -8,10 +8,12 @@
 #include "QSqlQuery"
 #include "QMessageBox"
 #include <QTimer>
+#include <QTime>
 #include <QRandomGenerator>
 #include <QSqlRecord>
 #include "ui_table_view_dict.h"
 #include "windowpopup.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -30,13 +32,15 @@ class MainWindow : public QMainWindow
         void creat_widget_1();
         void creat_widget_2();
         void set_time_repeat_popup(uint32_t time_ms);
+        void send_config(uint8_t config);
 
+    signals:
+        void send_config_signal(uint8_t config);
 
     public slots:
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
         void dict_item_double_clicked(QModelIndex index);
-        void config_table_view_dict();
         void config_table_dict_main_window();
         void add_sql_data();
         void main_add_sql_data();
@@ -74,11 +78,17 @@ class MainWindow : public QMainWindow
         uint16_t                    m_random;
         uint8_t                     m_f_frequency;//Flag.
         uint8_t                     m_frequency;
+        QString                     m_frequency_s;
+        QString                     m_word_english;
+        QString                     m_word_french;
+        uint8_t                     m_word_same_f;//Flag for same word.
+        uint8_t                     m_word_same_counter;
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
         QTimer                      *m_timer_popup;
         uint32_t                    m_repeat_popup_ms;//In milliseconds.
         uint8_t                     m_popup_f_first_time;//Flag.
+        uint8_t                     m_popup_f_show;//Flag to show or not the pop up.
         QTimer                      *m_timer_widget;
         QWidget                     m_widget_1;
         QWidget                     m_widget_2;
@@ -94,5 +104,6 @@ class MainWindow : public QMainWindow
         QGridLayout                 *m_layout_grid_4;
         QLineEdit                   m_line_1;
         QLineEdit                   m_line_2;
+        QTime                       m_time;//To get the current time.
 };
 #endif // MAINWINDOW_H
