@@ -26,6 +26,7 @@ class WindowPopUp : public QWidget
         void set_label_image(QString path);
         void plain_text_show_hide(uint8_t show_hide);
         void plain_add_text(QString text);
+        void set_list_day(QStringList list);
 
     public slots:
         void line_french_selected();
@@ -37,6 +38,7 @@ class WindowPopUp : public QWidget
         QPixmap             m_pix;
         uint8_t             m_line_french_is_selected;
         uint8_t             m_line_english_is_selected;
+        QStringList         m_list_day;
 };
 
 #endif // WINDOWPOPUP_H

@@ -2,7 +2,6 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 04/08/2023
  *
  * Description          :
  *
@@ -35,6 +34,18 @@ WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
     //Hide plain text at start-up.
     //Show only after x words.
     ui->plain_text->hide();
+
+//    //Move the window to an X,Y integer position : -----------------------
+//    QPoint point_popup;
+//    point_popup.setX(20);//old : 650 or 950.
+//    point_popup.setY(150);//old : 150 or 455.
+//    m_window_popup.move(point_popup);
+//    m_window_popup.setWindowState(Qt::WindowState::WindowActive);
+//    //--------------------------------------------------------------------
+
+
+
+
 
     //Connection between objects :
     connect(ui->line_french, &QLineEdit::selectionChanged, this, &WindowPopUp::line_french_selected);
@@ -149,5 +160,15 @@ void WindowPopUp::line_french_enter_pressed(){
  * We need to select (one click, not double click) the QLineEdit and then push to ENTER.
  */
     qDebug()<<"line_french_enter_pressed()";
+}
+//-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::set_list_day(QStringList list){
+/*
+ *
+ */
+    m_list_day = list;
+
+    qDebug()<<"m_list_day = "<<m_list_day;
 }
 //-------------------------------------------------------------------------------------------------

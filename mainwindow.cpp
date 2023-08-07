@@ -230,14 +230,23 @@ void MainWindow::table_edit_all_data(QStringList list){
  * Improvement : - "m_dict_2_row" can be local ?
  *
  */
-    uint8_t     i_column    = 0;
-    uint16_t    i_list      = 0;
+    uint8_t     i_column            = 0;
+    uint16_t    i_list              = 0;
+    uint16_t    position_of_id_data = 0;
+
+    //qDebug()<<"list = "<<list;
 
     //Edit each cell of the table : -----------------------------------------------------
     for(i_list = 0 ; i_list < list.size() ; i_list++){
-        m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
-
-        i_column++;
+        //Check if the data is not the id because we don't want to put it on the table.
+        //The id can be used on the popup window with random number.
+        if(i_list != position_of_id_data){
+            m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
+            i_column++;
+        }
+        else{
+            position_of_id_data = position_of_id_data + m_table_main_column_size + 1;
+        }
 
         if(i_column >= m_table_main_column_size){
             i_column = 0;//Reset.
@@ -254,18 +263,21 @@ void MainWindow::table_edit_all_data(QStringList list){
 
     //Set with empty string each column
     //otherwise, the code will crash when we click on main add button.
-    for(i_column=0 ; i_column < 6 ; i_column++){
+    //for(i_column=0 ; i_column < 6 ; i_column++){
+    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
         m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(""));
     }
     //-----------------------------------------------------------------------------------
 
     //Test to read text in a specific row and column.
-    qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
+    //qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
 
     m_dict_2_row_last = m_dict_2_row;
 
     //still used ???
     m_dict_2_row = 0;//Reset for next open of the table view.
+
+
 }
 //-------------------------------------------------------------------------------------------------
 
