@@ -14,6 +14,7 @@
 #include "ui_table_view_dict.h"
 #include "windowpopup.h"
 
+#define ALL_SQL_DATA        0
 
 
 QT_BEGIN_NAMESPACE
@@ -28,14 +29,12 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         void sql_edit_table_view();
-        void item_2_edit_table();
+        void table_edit_all_data(QStringList list);
         void creat_widget_1();
         void creat_widget_2();
         void set_time_repeat_popup(uint32_t time_ms);
-        void send_config(uint8_t config);
 
     signals:
-        void send_config_signal(uint8_t config);
 
     public slots:
         void menu_bar_show_hide(bool change);
@@ -48,6 +47,7 @@ class MainWindow : public QMainWindow
         void close_widget();
         void widget_test();
         void change_widget();
+        void receive_string_list(QStringList list);
 
 
     private:
@@ -105,5 +105,6 @@ class MainWindow : public QMainWindow
         QLineEdit                   m_line_1;
         QLineEdit                   m_line_2;
         QTime                       m_time;//To get the current time.
+        uint8_t                     m_table_main_column_size;
 };
 #endif // MAINWINDOW_H

@@ -2,7 +2,6 @@
  * Name of the project  : my_dictionary.
  *
  * Name of the creator  : Sam.
- * Date                 : 05/08/2023
  *
  * Description          :
  *
@@ -33,7 +32,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
     m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
     m_word_same_counter(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),
-    m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time()
+    m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time(),
+    m_table_main_column_size(10)
 /*
  *
  */
@@ -79,13 +79,13 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
 
-    //sql test : ----------------------------------------------------------------------------------
-    m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
-    //m_sql_db->setDatabaseName("release/dictionary_1.db");
-    m_sql_db->setDatabaseName("dictionary_1.db");
+//    //sql test : ----------------------------------------------------------------------------------
+//    m_sql_db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE"));
+//    //m_sql_db->setDatabaseName("release/dictionary_1.db");
+//    m_sql_db->setDatabaseName("dictionary_1.db");
 
-    m_sql_query = new QSqlQuery(*m_sql_db);
-    //---------------------------------------------------------------------------------------------
+//    m_sql_query = new QSqlQuery(*m_sql_db);
+//    //---------------------------------------------------------------------------------------------
 
     //Configure table view on the main window.
     config_table_dict_main_window();
@@ -115,7 +115,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     qDebug()<<"hour = "<<m_time.hour();
     //------------------------------------------------
 
-    m_timer_popup->start(m_repeat_popup_ms);
+    //m_timer_popup->start(m_repeat_popup_ms);
 }
 
 MainWindow::~MainWindow()
@@ -196,7 +196,8 @@ void MainWindow::dict_item_double_clicked(QModelIndex index){
     else if(index.data().toString() == m_item_2_s){
         qDebug()<<"m_item_2_s = "<<m_item_2_s;
 
-        item_2_edit_table();
+        //!!! Modification of this function (07/08/2023) !!!
+        //item_2_edit_table();
     }
     else if(index.data().toString() == m_item_2_2_s){
         m_widget.show();
@@ -209,78 +210,47 @@ void MainWindow::config_table_dict_main_window(){
  * !!! New methode !!!
  * Tabe View dictionary that will contain words in the sql database.
  */
-    QStringList horizontal_header_labels = {"English","Français","Family","Frequency","Visibility","Date"};
+    QStringList horizontal_header_labels = {"English","French","Family","Frequency","Date",
+        "Image","Syllable","Sentence","Visibility English","Visibility French"};
 
-    m_model_dict_2 = new QStandardItemModel(10,6);//(lines, columns).
+    m_model_dict_2 = new QStandardItemModel(10,10);//(lines, columns).
     m_model_dict_2->setHorizontalHeaderLabels(horizontal_header_labels);
 
     //Example to write in a cell.
     m_model_dict_2->setItem(4,1, new QStandardItem("Test to write"));
 
     ui->table_data_base->setModel(m_model_dict_2);
-
-    //At start-up of the main window, edit directly the table.
-    item_2_edit_table();
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::item_2_edit_table(){
+void MainWindow::table_edit_all_data(QStringList list){
 /*
- * On the main window, when double click on item 2, on the tree list, edit the table view
- * with sql data.
+ * On the main window, edit the table with all SQL data.
  *
- * ??? db.close() ???
+ * Improvement : - "m_dict_2_row" can be local ?
+ *
  */
-    if (!m_sql_db->open()) {
-        qDebug()<<"Cannot open database";
+    uint8_t     i_column    = 0;
+    uint16_t    i_list      = 0;
 
-        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
-            QObject::tr("Unable to establish a database connection.\n"
-                        "This example needs SQLite support. Please read "
-                        "the Qt SQL driver documentation for information how "
-                        "to build it.\n\n"
-                        "Click Cancel to exit."), QMessageBox::Cancel);
+    //Edit each cell of the table : -----------------------------------------------------
+    for(i_list = 0 ; i_list < list.size() ; i_list++){
+        m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
+
+        i_column++;
+
+        if(i_column >= m_table_main_column_size){
+            i_column = 0;//Reset.
+            m_dict_2_row++;//Next edition of the row on the table.
+        }
     }
-
-    m_sql_query->exec("SELECT english, french, family, frequency, visibility, date FROM dictionary_1");
-
-    qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
-
-    while(m_sql_query->next()){
-        /*************************************************************************
-         * "query.next()" set the current record.
-         *
-         * The index of the "query.value(...)" return the field of the command
-         * "SELECT firstname, lastname FROM person".
-         *
-         * The filed are numbered from left (0) to right (1).
-         *************************************************************************/
-
-        m_model_dict_2->setItem(m_dict_2_row,0,
-                                 new QStandardItem(m_sql_query->value(0).toString()));
-        m_model_dict_2->setItem(m_dict_2_row,1,
-                                 new QStandardItem(m_sql_query->value(1).toString()));
-        m_model_dict_2->setItem(m_dict_2_row,2,
-                                 new QStandardItem(m_sql_query->value(2).toString()));
-        m_model_dict_2->setItem(m_dict_2_row,3,
-                                 new QStandardItem(m_sql_query->value(3).toString()));
-        m_model_dict_2->setItem(m_dict_2_row,4,
-                                 new QStandardItem(m_sql_query->value(4).toString()));
-        m_model_dict_2->setItem(m_dict_2_row,5,
-                                 new QStandardItem(m_sql_query->value(5).toString()));
-
-        m_dict_2_row++;
-
-//        qDebug()<<m_sql_query->value(0).toString()<<" : "<<m_sql_query->value(1).toString()<<
-//                  " : "<<m_sql_query->value(2).toString()<<
-//                  " : "<<m_sql_query->value(3).toString()<<
-//                  " : "<<m_sql_query->value(4).toString();
-    }
+    //-----------------------------------------------------------------------------------
 
     //Add one empty row at the end (just row and QStandardItem parameter) : -------------
     m_model_dict_2->setItem(m_dict_2_row,new QStandardItem(""));
 
-    uint8_t i_column = 0;
+    //uint8_t i_column = 0;
+    i_column = 0;
 
     //Set with empty string each column
     //otherwise, the code will crash when we click on main add button.
@@ -292,14 +262,10 @@ void MainWindow::item_2_edit_table(){
     //Test to read text in a specific row and column.
     qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
 
-
-
-    //m_dict_2_row++;//Not necessary ???
-
     m_dict_2_row_last = m_dict_2_row;
-    m_dict_2_row = 0;//Reset for next open of the table view.
 
-    m_sql_db->close();
+    //still used ???
+    m_dict_2_row = 0;//Reset for next open of the table view.
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -744,15 +710,20 @@ void MainWindow::set_time_repeat_popup(uint32_t time_ms){
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::send_config(uint8_t config){
+void MainWindow::receive_string_list(QStringList list){qDebug()<<"receive_string_list";
 /*
  *
  */
-    emit send_config_signal(config);
+    uint16_t i_for = 0;
+
+    qDebug()<<"MainWindow::receive_string_list(...)";
+
+    for(i_for = 0; i_for < list.size(); i_for++){
+        qDebug()<<i_for<<" : "<<list[i_for];
+    }
+
+    //list.size();
 }
 //-------------------------------------------------------------------------------------------------
-
-
-
 
 
