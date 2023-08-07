@@ -35,16 +35,8 @@ WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
     //Show only after x words.
     ui->plain_text->hide();
 
-//    //Move the window to an X,Y integer position : -----------------------
-//    QPoint point_popup;
-//    point_popup.setX(20);//old : 650 or 950.
-//    point_popup.setY(150);//old : 150 or 455.
-//    m_window_popup.move(point_popup);
-//    m_window_popup.setWindowState(Qt::WindowState::WindowActive);
-//    //--------------------------------------------------------------------
-
-
-
+    //Move the lower left corner of the window popup at a specific (x,y) coordinate.
+    move(20,150);//old (650,150).
 
 
     //Connection between objects :

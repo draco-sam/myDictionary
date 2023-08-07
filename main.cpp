@@ -23,12 +23,6 @@ int main(int argc, char *argv[])
     //main_window.table_edit_all_data(sql_db.get_data_day());//Test for list of day on main.
 
     WindowPopUp win_popup;
-    QPoint point_popup;
-
-    point_popup.setX(20);//old : 650 or 950.
-    point_popup.setY(150);//old : 150 or 455.
-
-    win_popup.move(point_popup);
 
     win_popup.show();
 
