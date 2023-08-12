@@ -7,6 +7,12 @@
 #include "QtSql/QSqlDatabase"
 #include "QSqlQuery"
 #include "QMessageBox"
+#include "list_data_struct.h"
+
+//struct ListDay{
+//    QStringList table[50];
+//    uint16_t    size = 50;
+//};
 
 class SqlDataBase : public QObject
 {
@@ -17,7 +23,7 @@ class SqlDataBase : public QObject
         ~SqlDataBase();
         void send_string_list();
         QStringList get_data_all();
-        QStringList get_data_day();
+        ListData get_data_day();
 
     signals:
         void send_string_list_signal(QStringList list);//To delete !!!
@@ -26,9 +32,10 @@ class SqlDataBase : public QObject
 
 
     private:
-        QStringList                 m_string_list;
-        QStringList                 m_string_list_all;
-        QStringList                 m_string_list_day;
+        QStringList                 m_list_string;
+        QStringList                 m_list_all_string;
+        //QStringList                 m_list_day_string;
+        ListData                     m_list_day;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;
         uint8_t                     m_table_main_column_size;

@@ -276,7 +276,64 @@ void MainWindow::table_edit_all_data(QStringList list){
 
     //still used ???
     m_dict_2_row = 0;//Reset for next open of the table view.
+}
+//-------------------------------------------------------------------------------------------------
 
+void MainWindow::table_edit(ListData list_data){
+/*
+ * On the main window, edit the table with SQL data.
+ *
+ * Input parameter :
+ *      - Structure "ListData" with a table that contains QStringList and the size of the table.
+ *
+ * Improvement : - "m_dict_2_row" can be local ?
+ *
+ */
+    uint8_t     i_column            = 0;
+    uint16_t    i_q_string_list     = 0;
+    uint16_t    i_list              = 0;
+    QStringList list;
+
+    //Extract each cell of the table that contains QStringList : ----------------------------------
+    for(i_q_string_list = 0 ; i_q_string_list < list_data.size ; i_q_string_list++){
+        list.append(list_data.table[i_q_string_list]);
+
+        //Navigate in to the QStringList to extract useful data.
+        //The id number of the SQL data is not useful :
+        for(i_list = 1 ; i_list < list.size() ; i_list++){
+            m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
+            i_column++;
+
+            if(i_column >= m_table_main_column_size){
+                i_column = 0;//Reset.
+                m_dict_2_row++;//Next edition of the row on the table.
+            }
+        }
+
+        list.clear();
+    }
+    //---------------------------------------------------------------------------------------------
+
+    //Add one empty row at the end (just row and QStandardItem parameter) : -------------
+    m_model_dict_2->setItem(m_dict_2_row,new QStandardItem(""));
+
+    i_column = 0;
+
+    //Set with empty string each column
+    //otherwise, the code will crash when we click on main add button.
+    //for(i_column=0 ; i_column < 6 ; i_column++){
+    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
+        m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(""));
+    }
+    //-----------------------------------------------------------------------------------
+
+    //Test to read text in a specific row and column.
+    //qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
+
+    m_dict_2_row_last = m_dict_2_row;
+
+    //still used ???
+    m_dict_2_row = 0;//Reset for next open of the table view.
 
 }
 //-------------------------------------------------------------------------------------------------

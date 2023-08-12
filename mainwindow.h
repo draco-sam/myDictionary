@@ -13,6 +13,7 @@
 #include <QSqlRecord>
 #include "ui_table_view_dict.h"
 #include "windowpopup.h"
+#include "list_data_struct.h"
 
 #define ALL_SQL_DATA        0
 
@@ -30,6 +31,7 @@ class MainWindow : public QMainWindow
         ~MainWindow();
         void sql_edit_table_view();
         void table_edit_all_data(QStringList list);
+        void table_edit(ListData list_data);
         void creat_widget_1();
         void creat_widget_2();
         void set_time_repeat_popup(uint32_t time_ms);
@@ -106,5 +108,6 @@ class MainWindow : public QMainWindow
         QLineEdit                   m_line_2;
         QTime                       m_time;//To get the current time.
         uint8_t                     m_table_main_column_size;
+        ListData                    m_list_data;
 };
 #endif // MAINWINDOW_H

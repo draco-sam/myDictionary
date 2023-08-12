@@ -40,11 +40,11 @@ void SqlDataBase::send_string_list(){
 /*
  * Emit a signal to share a QStringList with another class.
  */
-    m_string_list.append("english");
-    m_string_list.append("french");
-    m_string_list.append("date");
+    m_list_string.append("english");
+    m_list_string.append("french");
+    m_list_string.append("date");
 
-    emit send_string_list_signal(m_string_list);
+    emit send_string_list_signal(m_list_string);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -83,22 +83,26 @@ QStringList SqlDataBase::get_data_all(){
          *************************************************************************/
 
         for(i_column = 0 ; i_column < m_table_main_column_size ; i_column++){
-            m_string_list_all.append(m_sql_query->value(i_column).toString());
+            m_list_all_string.append(m_sql_query->value(i_column).toString());
         }
     }
 
     m_sql_db->close();
 
-    return m_string_list_all;
+    return m_list_all_string;
 }
 //-------------------------------------------------------------------------------------------------
 
-QStringList SqlDataBase::get_data_day(){
+ListData SqlDataBase::get_data_day(){
 /*
  *
  */
-    uint8_t         i_column = 0;
+    uint8_t         i_column    = 0;
+    uint16_t        line_number = 0;
+    uint16_t        table_size  = 0;
     QStringList     list_temporary;
+
+    table_size = m_list_day.size;
 
     if (!m_sql_db->open()) {
         qDebug()<<"Cannot open database";
@@ -133,18 +137,18 @@ QStringList SqlDataBase::get_data_day(){
         }
 
         if(list_temporary[m_column_frequency_num].toInt() >= 8){//old 7.
-            //qDebug()<<"list_temporary = "<<list_temporary;
-
-            //m_string_list_day = m_string_list_day + list_temporary;
-            m_string_list_day.append(list_temporary);
+            if(line_number < table_size){
+                m_list_day.table[line_number] = list_temporary;
+                line_number++;
+            }
         }
 
         list_temporary.clear();
-    }
+    }//End while.
 
     m_sql_db->close();
 
-    return m_string_list_day;
+    return m_list_day;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -19,8 +19,28 @@ int main(int argc, char *argv[])
 
     //Edit the main table with the SQL data
     //that is given by the SqlDataBase class.
-    main_window.table_edit_all_data(sql_db.get_data_all());
-    //main_window.table_edit_all_data(sql_db.get_data_day());//Test for list of day on main.
+    //main_window.table_edit_all_data(sql_db.get_data_all());//table_edit
+
+    main_window.table_edit(sql_db.get_data_day());
+
+
+
+    //main_window.table_edit(sql_db.get_data_day());
+
+//    //Test of get_data_day() with structure : -----------------------
+//    ListDay list_day;
+
+//    list_day = sql_db.get_data_day();
+
+//    uint8_t i_for = 0;
+
+//    for(i_for = 0 ; i_for < list_day.size ; i_for++){
+//        if(list_day.table[i_for].isEmpty() == false){
+//            qDebug()<<"list_day = "<<list_day.table[i_for];
+//        }
+//    }
+//    //---------------------------------------------------------------
+
 
     WindowPopUp win_popup;
 
