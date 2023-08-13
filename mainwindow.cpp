@@ -24,14 +24,13 @@
 //MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui(new Ui::MainWindow),ui_table_view_dict(new Ui::Table_view_dict),
-    ui_popup(new Ui::WindowPopUp),
 
     m_menu_right_click(0), m_modele_dictionary(0),
     m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_item_2_s(""),
     m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
     m_dict_1_column(0),m_sql_query(0),m_sql_db(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
     m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
-    m_word_same_counter(0),m_nb_of_word(0),m_timer_popup(0),m_repeat_popup_ms(5000),
+    m_word_same_counter(0),m_nb_of_word(0),m_repeat_popup_ms(5000),
     m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time(),
     m_table_main_column_size(10)
 /*
@@ -39,8 +38,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
  */
 {
     ui->setupUi(this);
-
-    ui_popup->setupUi(&m_widget);
 
 
     //ui->menubar->hide();
@@ -90,9 +87,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //Configure table view on the main window.
     config_table_dict_main_window();
 
-    //First call of the pop up window with a timer :
-    m_timer_popup = new QTimer(this);
-
     //Connection between objects : ---------------------------------------------------------------------
     connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
 
@@ -105,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     connect(ui->button_main_add, &QPushButton::clicked, this, &MainWindow::main_add_sql_data);
 
-    connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
+    //connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
     //--------------------------------------------------------------------------------------------------
 
     //Test to get the time of the system : -----------
@@ -115,7 +109,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     qDebug()<<"hour = "<<m_time.hour();
     //------------------------------------------------
 
-    //m_timer_popup->start(m_repeat_popup_ms);
 }
 
 MainWindow::~MainWindow()
@@ -519,6 +512,8 @@ void MainWindow::add_sql_data(){
 
 void MainWindow::window_popup_show(){
 /*
+ * !!! To delete !!!
+ *
  * Open a pop up window with random words every x ms.
  *
  * (0,0) : Top left on Windows 10
@@ -682,8 +677,9 @@ void MainWindow::window_popup_show(){
         //------------------------------------------------------------------------------------
 
 
-
+        // !!! Delete !!!
         set_time_repeat_popup(900e3);//15 min.
+
         m_popup_f_show = 0;//Reset.
 
         //Test !!!
@@ -702,6 +698,7 @@ void MainWindow::window_popup_show(){
         m_word_english = "";//Reset.
         m_word_french = "";//Reset.
 
+        // !!! Delete !!!
         set_time_repeat_popup(100);//Resart timer because wrong frequency number.
     }
 
@@ -769,12 +766,14 @@ void MainWindow::creat_widget_2(){
 
 void MainWindow::set_time_repeat_popup(uint32_t time_ms){
 /*
+ * !!! To delete !!!
+ *
  * Set the time to repeat the appearance of the popup window.
  */
     m_repeat_popup_ms = time_ms;
 
     //m_timer_popup->stop();
-    m_timer_popup->start(m_repeat_popup_ms);
+    //m_timer_popup->start(m_repeat_popup_ms);
 
 }
 //-------------------------------------------------------------------------------------------------

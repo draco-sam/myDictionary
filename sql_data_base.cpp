@@ -148,6 +148,8 @@ ListData SqlDataBase::get_data_day(){
 
     m_sql_db->close();
 
+    m_list_day.size = line_number;
+
     return m_list_day;
 }
 

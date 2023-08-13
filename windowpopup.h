@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QPixmap>
-
+#include <QTimer>
+#include <QRandomGenerator>
+#include "list_data_struct.h"
 
 #define PLAIN_TEXT_HIDE 0
 #define PLAIN_TEXT_SHOW 1
@@ -26,19 +28,21 @@ class WindowPopUp : public QWidget
         void set_label_image(QString path);
         void plain_text_show_hide(uint8_t show_hide);
         void plain_add_text(QString text);
-        void set_list_day(QStringList list);
+        void set_list_day(ListData list);
 
     public slots:
         void line_french_selected();
         void line_english_selected();
         void line_french_enter_pressed();
+        void window_show();
 
     private:
         Ui::WindowPopUp     *ui;
         QPixmap             m_pix;
         uint8_t             m_line_french_is_selected;
         uint8_t             m_line_english_is_selected;
-        QStringList         m_list_day;
+        QTimer              *m_popup_timer;
+        ListData            m_list_day;
 };
 
 #endif // WINDOWPOPUP_H

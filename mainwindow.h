@@ -55,7 +55,7 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow              *ui;
         Ui::Table_view_dict         *ui_table_view_dict;
-        Ui::WindowPopUp             *ui_popup;//Test !!!
+        //Ui::WindowPopUp             *ui_popup;//Test !!!
         WindowPopUp                 m_window_popup;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
@@ -87,7 +87,6 @@ class MainWindow : public QMainWindow
         uint8_t                     m_word_same_counter;
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
-        QTimer                      *m_timer_popup;
         uint32_t                    m_repeat_popup_ms;//In milliseconds.
         uint8_t                     m_popup_f_first_time;//Flag.
         uint8_t                     m_popup_f_show;//Flag to show or not the pop up.
