@@ -201,10 +201,8 @@ void WindowPopUp::window_show(){
     }
     //-------------------------------------------------------------------------
 
-    //sql_line_random = QRandomGenerator::global()->bounded(sql_line_max - 1);
     sql_line_random = QRandomGenerator::global()->bounded(table_list_max - 1);
 
-    //string_list = m_list_day_temporary.table[sql_line_random];
     string_list = table_list[sql_line_random];
 
     //Edit the window popup : ---------------------------------------
@@ -226,13 +224,22 @@ void WindowPopUp::window_show(){
     }
     //-----------------------------------------------------------------------------------
 
+    //Add words on plain text and show after x words : --------------
+    plain_add_text(string_list[1] + " : " + string_list[2]);
+
+    if(m_list_clear_line_counter >= 10){
+        plain_text_show_hide(PLAIN_TEXT_SHOW);
+    }
+    //---------------------------------------------------------------
+
+    //Copy again the "m_list_day" on temporary list : ---------------
     if(m_list_clear_line_counter >= sql_line_max){
         m_list_day_temporary = m_list_day;
         m_list_clear_line_counter = 0;//Reset.
         qDebug()<<"copy m_list_day into m_list_day_temporary";
     }
+    //---------------------------------------------------------------
 
-    //...
     string_list.clear();
 
 
