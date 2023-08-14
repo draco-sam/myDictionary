@@ -13,7 +13,9 @@
 #include <QSqlRecord>
 #include "ui_table_view_dict.h"
 #include "windowpopup.h"
+#include "list_data_struct.h"
 
+#define ALL_SQL_DATA        0
 
 
 QT_BEGIN_NAMESPACE
@@ -28,14 +30,13 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
         void sql_edit_table_view();
-        void item_2_edit_table();
+        void table_edit_all_data(QStringList list);
+        void table_edit(ListData list_data);
         void creat_widget_1();
         void creat_widget_2();
         void set_time_repeat_popup(uint32_t time_ms);
-        void send_config(uint8_t config);
 
     signals:
-        void send_config_signal(uint8_t config);
 
     public slots:
         void menu_bar_show_hide(bool change);
@@ -48,12 +49,13 @@ class MainWindow : public QMainWindow
         void close_widget();
         void widget_test();
         void change_widget();
+        void receive_string_list(QStringList list);
 
 
     private:
         Ui::MainWindow              *ui;
         Ui::Table_view_dict         *ui_table_view_dict;
-        Ui::WindowPopUp             *ui_popup;//Test !!!
+        //Ui::WindowPopUp             *ui_popup;//Test !!!
         WindowPopUp                 m_window_popup;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
@@ -85,7 +87,6 @@ class MainWindow : public QMainWindow
         uint8_t                     m_word_same_counter;
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
-        QTimer                      *m_timer_popup;
         uint32_t                    m_repeat_popup_ms;//In milliseconds.
         uint8_t                     m_popup_f_first_time;//Flag.
         uint8_t                     m_popup_f_show;//Flag to show or not the pop up.
@@ -105,5 +106,7 @@ class MainWindow : public QMainWindow
         QLineEdit                   m_line_1;
         QLineEdit                   m_line_2;
         QTime                       m_time;//To get the current time.
+        uint8_t                     m_table_main_column_size;
+        ListData                    m_list_data;
 };
 #endif // MAINWINDOW_H

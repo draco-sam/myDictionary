@@ -17,6 +17,7 @@ SOURCES += \
     windowpopup.cpp
 
 HEADERS += \
+    list_data_struct.h \
     mainwindow.h \
     sql_data_base.h \
     windowpopup.h

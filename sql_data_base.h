@@ -3,6 +3,16 @@
 
 #include <QObject>
 #include <QtDebug>
+#include <QStringList>
+#include "QtSql/QSqlDatabase"
+#include "QSqlQuery"
+#include "QMessageBox"
+#include "list_data_struct.h"
+
+//struct ListDay{
+//    QStringList table[50];
+//    uint16_t    size = 50;
+//};
 
 class SqlDataBase : public QObject
 {
@@ -11,9 +21,26 @@ class SqlDataBase : public QObject
     public:
         SqlDataBase();
         ~SqlDataBase();
+        void send_string_list();
+        QStringList get_data_all();
+        ListData get_data_day();
+
+    signals:
+        void send_string_list_signal(QStringList list);//To delete !!!
 
     public slots:
-        void receive_config(uint8_t config_number);
+
+
+    private:
+        QStringList                 m_list_string;
+        QStringList                 m_list_all_string;
+        //QStringList                 m_list_day_string;
+        ListData                     m_list_day;
+        QSqlQuery                   *m_sql_query;
+        QSqlDatabase                *m_sql_db;
+        uint8_t                     m_table_main_column_size;
+        uint8_t                     m_table_day_column_size;
+        uint8_t                     m_column_frequency_num;
 };
 
 #endif // SQLDATABASE_H
