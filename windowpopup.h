@@ -41,8 +41,10 @@ class WindowPopUp : public QWidget
         QPixmap             m_pix;
         uint8_t             m_line_french_is_selected;
         uint8_t             m_line_english_is_selected;
+        uint16_t            m_list_clear_line_counter;
         QTimer              *m_popup_timer;
         ListData            m_list_day;
+        ListData            m_list_day_temporary;
 };
 
 #endif // WINDOWPOPUP_H

@@ -16,7 +16,7 @@
 
 WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
     ui(new Ui::WindowPopUp),m_pix("Images/workshop.jpg"),m_line_french_is_selected(0),
-    m_line_english_is_selected(0),m_popup_timer(0)
+    m_line_english_is_selected(0),m_list_clear_line_counter(0),m_popup_timer(0)
 {
     ui->setupUi(this);
 
@@ -168,8 +168,9 @@ void WindowPopUp::set_list_day(ListData list){
  */
 
     m_list_day = list;
+    m_list_day_temporary = list;
 
-    m_popup_timer->start(5000);
+    m_popup_timer->start(3000);
 
     qDebug()<<"m_list_data = "<<m_list_day.table[0];
 }
@@ -181,29 +182,60 @@ void WindowPopUp::window_show(){
  */
     uint8_t     sql_line_random = 0;
     uint8_t     sql_line_max    = 0;
+    uint16_t    table_list_max  = 0;
+    uint16_t    i_for           = 0;
     QStringList string_list;
-
-    //1)Random number.
-    //2)Enlever la QStringList du tableau original.
-    //3)Mettre cette liste dans une autre variable pour quand tout sera fini.
-    //4)Chercher les infos pour editer les champs dans la popup.
+    QStringList table_list[50];
 
     close();
 
     sql_line_max = m_list_day.size;
 
-    sql_line_random = QRandomGenerator::global()->bounded(sql_line_max - 1);
+    //Add on "table_list" only data that is not empty : -----------------------
+    //from "m_list_day_temporary"
+    for(i_for = 0 ; i_for <sql_line_max ; i_for++){
+        if(m_list_day_temporary.table[i_for].isEmpty() == false){
+            table_list[table_list_max] = m_list_day_temporary.table[i_for];
+            table_list_max++;
+        }
+    }
+    //-------------------------------------------------------------------------
 
-    string_list = m_list_day.table[sql_line_random];
+    //sql_line_random = QRandomGenerator::global()->bounded(sql_line_max - 1);
+    sql_line_random = QRandomGenerator::global()->bounded(table_list_max - 1);
 
+    //string_list = m_list_day_temporary.table[sql_line_random];
+    string_list = table_list[sql_line_random];
+
+    //Edit the window popup : ---------------------------------------
     line_english_set_text(string_list[1]);
     line_french_set_text(string_list[2]);
     line_frequency_set_text("Frequency : " + string_list[4]);
     set_label_english(string_list[1]);
     set_label_image(string_list[6]);//??? ok ???
+    //---------------------------------------------------------------
+
+    //Browse the "m_list_day_temporary" : -----------------------------------------------
+    //and clear the QStringList than the random one on "table_list".
+    //Check the id number for comparison.
+    for(i_for = 0 ; i_for <sql_line_max ; i_for++){
+        if(m_list_day_temporary.table[i_for][0] == table_list[sql_line_random][0]){
+            m_list_day_temporary.table[i_for].clear();
+            m_list_clear_line_counter++;
+        }
+    }
+    //-----------------------------------------------------------------------------------
+
+    if(m_list_clear_line_counter >= sql_line_max){
+        m_list_day_temporary = m_list_day;
+        m_list_clear_line_counter = 0;//Reset.
+        qDebug()<<"copy m_list_day into m_list_day_temporary";
+    }
 
     //...
     string_list.clear();
+
+
 
     show();
 }
