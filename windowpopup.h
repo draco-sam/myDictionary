@@ -34,6 +34,7 @@ class WindowPopUp : public QWidget
         void line_french_selected();
         void line_english_selected();
         void line_french_enter_pressed();
+        void line_english_enter_pressed();
         void window_show();
 
     private:
@@ -45,6 +46,11 @@ class WindowPopUp : public QWidget
         QTimer              *m_popup_timer;
         ListData            m_list_day;
         ListData            m_list_day_temporary;
+        QString             m_english_s;
+        QString             m_english_visibility_s;
+        QString             m_french_s;
+        QString             m_french_visibility_s;
+
 };
 
 #endif // WINDOWPOPUP_H
