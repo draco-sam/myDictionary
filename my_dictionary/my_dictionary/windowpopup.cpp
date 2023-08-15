@@ -140,6 +140,7 @@ void WindowPopUp::line_french_selected(){
  * We need to double click en the QlineEdit to emitted the signal.
  */
     line_french_set_text(m_french_s);
+
     qDebug()<<"line_french_selected()";
 }
 //-------------------------------------------------------------------------------------------------
