@@ -12,7 +12,6 @@
 #include <QRandomGenerator>
 #include <QSqlRecord>
 #include "ui_table_view_dict.h"
-#include "windowpopup.h"
 #include "list_data_struct.h"
 
 #define ALL_SQL_DATA        0
@@ -29,7 +28,6 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-        void sql_edit_table_view();
         void table_edit_all_data(QStringList list);
         void table_edit(ListData list_data);
         void creat_widget_1();
@@ -41,11 +39,8 @@ class MainWindow : public QMainWindow
     public slots:
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
-        void dict_item_double_clicked(QModelIndex index);
+        //void dict_item_double_clicked(QModelIndex index);
         void config_table_dict_main_window();
-        void add_sql_data();
-        void main_add_sql_data();
-        void window_popup_show();
         void close_widget();
         void widget_test();
         void change_widget();
@@ -55,8 +50,6 @@ class MainWindow : public QMainWindow
     private:
         Ui::MainWindow              *ui;
         Ui::Table_view_dict         *ui_table_view_dict;
-        //Ui::WindowPopUp             *ui_popup;//Test !!!
-        WindowPopUp                 m_window_popup;
         QMenu                       *m_menu_right_click;
         QStandardItemModel          *m_modele_dictionary;
         QStandardItemModel          *m_modele_dict_1;//old modele.
@@ -74,8 +67,6 @@ class MainWindow : public QMainWindow
         int16_t                     m_dict_1_row_last;
         int16_t                     m_dict_2_row_last;
         int16_t                     m_dict_1_column;
-        QSqlQuery                   *m_sql_query;
-        QSqlDatabase                *m_sql_db;
         uint16_t                    m_sql_row_count;
         uint16_t                    m_random;
         uint8_t                     m_f_frequency;//Flag.
