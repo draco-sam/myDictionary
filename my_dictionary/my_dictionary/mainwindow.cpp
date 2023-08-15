@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
     m_dict_1_column(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
     m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
-    m_word_same_counter(0),m_nb_of_word(0),m_repeat_popup_ms(5000),
+    m_word_same_counter(0),m_nb_of_word(0),
     m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time(),
     m_table_main_column_size(10)
 /*
@@ -431,20 +431,6 @@ void MainWindow::creat_widget_2(){
     m_layout_grid_2->addWidget(&m_line_2,1,0);
 
     m_widget_2.setLayout(m_layout_grid_2);
-
-}
-//-------------------------------------------------------------------------------------------------
-
-void MainWindow::set_time_repeat_popup(uint32_t time_ms){
-/*
- * !!! To delete !!!
- *
- * Set the time to repeat the appearance of the popup window.
- */
-    m_repeat_popup_ms = time_ms;
-
-    //m_timer_popup->stop();
-    //m_timer_popup->start(m_repeat_popup_ms);
 
 }
 //-------------------------------------------------------------------------------------------------

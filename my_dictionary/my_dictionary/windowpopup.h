@@ -29,6 +29,7 @@ class WindowPopUp : public QWidget
         void plain_text_show_hide(uint8_t show_hide);
         void plain_add_text(QString text);
         void set_list_day(ListData list);
+        void set_time_repeat_popup(uint32_t time_ms);
 
     public slots:
         void line_french_selected();
@@ -43,6 +44,7 @@ class WindowPopUp : public QWidget
         uint8_t             m_line_french_is_selected;
         uint8_t             m_line_english_is_selected;
         uint16_t            m_list_clear_line_counter;
+        uint32_t            m_repeat_popup_ms;
         QTimer              *m_popup_timer;
         ListData            m_list_day;
         ListData            m_list_day_temporary;

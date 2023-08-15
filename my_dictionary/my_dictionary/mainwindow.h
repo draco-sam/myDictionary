@@ -32,7 +32,6 @@ class MainWindow : public QMainWindow
         void table_edit(ListData list_data);
         void creat_widget_1();
         void creat_widget_2();
-        void set_time_repeat_popup(uint32_t time_ms);
 
     signals:
 
@@ -78,7 +77,6 @@ class MainWindow : public QMainWindow
         uint8_t                     m_word_same_counter;
         QStringList                 m_list_day;
         uint16_t                    m_nb_of_word;
-        uint32_t                    m_repeat_popup_ms;//In milliseconds.
         uint8_t                     m_popup_f_first_time;//Flag.
         uint8_t                     m_popup_f_show;//Flag to show or not the pop up.
         QTimer                      *m_timer_widget;
