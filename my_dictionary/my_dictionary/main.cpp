@@ -21,7 +21,8 @@ int main(int argc, char *argv[])
     //that is given by the SqlDataBase class.
     //main_window.table_edit_all_data(sql_db.get_data_all());//table_edit
 
-    main_window.table_edit(sql_db.get_data_day());
+    //main_window.table_edit(sql_db.get_data_day());
+    main_window.table_edit(sql_db.get_data_all());
 
     WindowPopUp win_popup;
     win_popup.set_list_day(sql_db.get_data_day());

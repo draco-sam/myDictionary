@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow
     public slots:
         void menu_bar_show_hide(bool change);
         void dict_table_view_open();
-        //void dict_item_double_clicked(QModelIndex index);
+        void dict_item_double_clicked(QModelIndex index);
         void config_table_dict_main_window();
         void close_widget();
         void widget_test();

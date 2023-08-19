@@ -82,11 +82,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
 
     //Open a specific dictionary when we do a double click on any one items.
-    //connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
+    connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
     //!!! this connection crash the software (05/08/2023) !!!
     //connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
-    //qDebug()<<"After connect with pb_add";
 
     //connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
     //--------------------------------------------------------------------------------------------------
@@ -153,35 +152,35 @@ void MainWindow::dict_table_view_open(){
 }
 //-------------------------------------------------------------------------------------------------
 
-//void MainWindow::dict_item_double_clicked(QModelIndex index){
-///*
-// * Open another GUI created on Qt Designer if the string of the index
-// * is the string of a specific item on the TreeView.
-// */
-//    //qDebug()<<"index = "<<index;
+void MainWindow::dict_item_double_clicked(QModelIndex index){
+/*
+ * Open another GUI created on Qt Designer if the string of the index
+ * is the string of a specific item on the TreeView.
+ */
+    //qDebug()<<"index = "<<index;
 
-//    qDebug()<<"Double click on item = "<<index.data().toString();
+    qDebug()<<"Double click on item = "<<index.data().toString();
 
 
-//    //Check if the string of the index is "Dictionary_2.2".
-//    //If yes, open another GUI.
-//    if(index.data().toString() == m_item_1_s){
-//        qDebug()<<"m_item_1_s = "<<m_item_1_s;
+    //Check if the string of the index is "Dictionary_2.2".
+    //If yes, open another GUI.
+    if(index.data().toString() == m_item_1_s){
+        qDebug()<<"m_item_1_s = "<<m_item_1_s;
 
-//        sql_edit_table_view();
-//        m_widget_dict_1.show();
-//    }
-//    else if(index.data().toString() == m_item_2_s){
-//        qDebug()<<"m_item_2_s = "<<m_item_2_s;
+        //sql_edit_table_view();
+        //m_widget_dict_1.show();
+    }
+    else if(index.data().toString() == m_item_2_s){
+        qDebug()<<"m_item_2_s = "<<m_item_2_s;
 
-//        //!!! Modification of this function (07/08/2023) !!!
-//        //item_2_edit_table();
-//    }
-//    else if(index.data().toString() == m_item_2_2_s){
-//        m_widget.show();
-//    }
-//}
-////-------------------------------------------------------------------------------------------------
+        //!!! Modification of this function (07/08/2023) !!!
+        //item_2_edit_table();
+    }
+    else if(index.data().toString() == m_item_2_2_s){
+        //m_widget.show();
+    }
+}
+//-------------------------------------------------------------------------------------------------
 
 void MainWindow::config_table_dict_main_window(){
 /*
@@ -268,16 +267,16 @@ void MainWindow::table_edit(ListData list_data){
  *
  */
     uint8_t     i_column            = 0;
-    uint16_t    i_q_string_list     = 0;
+    uint16_t    i_string_list     = 0;
     uint16_t    i_list              = 0;
     QStringList list;
 
     //Extract each cell of the table that contains QStringList : ----------------------------------
-    for(i_q_string_list = 0 ; i_q_string_list < list_data.size ; i_q_string_list++){
-        list.append(list_data.table[i_q_string_list]);
+    for(i_string_list = 0 ; i_string_list < list_data.size ; i_string_list++){
+        list.append(list_data.table[i_string_list]);
 
         //Navigate in to the QStringList to extract useful data.
-        //The id number of the SQL data is not useful :
+        //The id number of the SQL data is not useful so, we start at 1 :
         for(i_list = 1 ; i_list < list.size() ; i_list++){
             m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
             i_column++;
@@ -299,7 +298,6 @@ void MainWindow::table_edit(ListData list_data){
 
     //Set with empty string each column
     //otherwise, the code will crash when we click on main add button.
-    //for(i_column=0 ; i_column < 6 ; i_column++){
     for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
         m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(""));
     }
