@@ -16,7 +16,7 @@
 
 WindowPopUp::WindowPopUp(QWidget *parent) : QWidget(parent),
     ui(new Ui::WindowPopUp),m_pix("Images/workshop.jpg"),m_line_french_is_selected(0),
-    m_line_english_is_selected(0),m_list_clear_line_counter(0),m_popup_timer(0),
+    m_line_english_is_selected(0),m_list_clear_line_counter(0),m_repeat_popup_ms(5000),m_popup_timer(0),
     m_english_s(""),m_english_visibility_s("1"),m_french_s(""),m_french_visibility_s("1")
 {
     ui->setupUi(this);
@@ -140,6 +140,7 @@ void WindowPopUp::line_french_selected(){
  * We need to double click en the QlineEdit to emitted the signal.
  */
     line_french_set_text(m_french_s);
+
     qDebug()<<"line_french_selected()";
 }
 //-------------------------------------------------------------------------------------------------
@@ -186,7 +187,7 @@ void WindowPopUp::set_list_day(ListData list){
     m_list_day = list;
     m_list_day_temporary = list;
 
-    m_popup_timer->start(10000);//3000;
+    m_popup_timer->start(m_repeat_popup_ms);//3000;
 
     qDebug()<<"m_list_data = "<<m_list_day.table[0];
 }
@@ -204,6 +205,8 @@ void WindowPopUp::window_show(){
     QStringList table_list[50];
 
     close();
+
+    set_time_repeat_popup(900e3);//15 min <-> 900 000 ms.
 
     sql_line_max = m_list_day.size;
 
@@ -276,5 +279,19 @@ void WindowPopUp::window_show(){
     string_list.clear();
 
     show();
+}
+//-------------------------------------------------------------------------------------------------
+
+void WindowPopUp::set_time_repeat_popup(uint32_t time_ms){
+    /*
+ * !!! To delete !!!
+ *
+ * Set the time to repeat the appearance of the popup window.
+ */
+    m_repeat_popup_ms = time_ms;
+
+    m_popup_timer->stop();
+    m_popup_timer->start(m_repeat_popup_ms);
+
 }
 //-------------------------------------------------------------------------------------------------
