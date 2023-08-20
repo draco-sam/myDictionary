@@ -25,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui(new Ui::MainWindow),ui_table_view_dict(new Ui::Table_view_dict),
 
     m_menu_right_click(0), m_modele_dictionary(0),
-    m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),m_item_2_s(""),
-    m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_dict_2_row_last(0),
+    m_modele_dict_1(0),m_model_dict_2(0),m_item_dictionary(0),m_item_1_1_dict(0),
+    m_item_1_s(""),m_item_2_s(""),m_item_3_s(""),m_tree_words_all_f(false),
+    m_dict_1_row(0),m_dict_2_row(0),m_dict_1_row_last(0),m_row_last(0),
     m_dict_1_column(0),m_sql_row_count(0),m_random(0),m_f_frequency(0),
     m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
     m_word_same_counter(0),m_nb_of_word(0),
@@ -48,10 +49,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_menu_right_click->addMenu("test");
     //m_menu_right_click->showTearOffMenu();
 
-    //Dictionaries on Main Window : -------------------------------------------
+    //Create the tree on Main Window : ----------------------------------------
     m_modele_dictionary     = new QStandardItemModel;
 
-    m_item_dictionary       = new QStandardItem("Dictionary_1");
+    m_item_dictionary       = new QStandardItem("All words");
     m_modele_dictionary->appendRow(m_item_dictionary);
     m_item_1_s = m_item_dictionary->index().data().toString();
 
@@ -62,7 +63,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     m_item_dictionary->appendRow(new QStandardItem("Dictionary_1.2"));
 
-    m_item_dictionary = new QStandardItem("Dictionary_2");
+    m_item_dictionary = new QStandardItem("Words of the day");
     m_modele_dictionary->appendRow(m_item_dictionary);
     m_item_2_s = m_item_dictionary->index().data().toString();
     m_item_dictionary->appendRow(new QStandardItem("Dictionary_2.1"));
@@ -71,6 +72,10 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_item_dictionary->appendRow(m_item_2_2_dict);
     m_item_2_2_dict->appendRow(new QStandardItem("Dictionary_2.2.1"));
     m_item_2_2_s            = m_item_2_2_dict->index().data().toString();
+
+    m_item_dictionary = new QStandardItem("Words by family");
+    m_modele_dictionary->appendRow(m_item_dictionary);
+    m_item_3_s = m_item_dictionary->index().data().toString();
 
     ui->treeView->setModel(m_modele_dictionary);
     //-------------------------------------------------------------------------
@@ -154,21 +159,17 @@ void MainWindow::dict_table_view_open(){
 
 void MainWindow::dict_item_double_clicked(QModelIndex index){
 /*
- * Open another GUI created on Qt Designer if the string of the index
- * is the string of a specific item on the TreeView.
+ * Update the main table when we double click on a item on the tree.
+ *
  */
     //qDebug()<<"index = "<<index;
 
     qDebug()<<"Double click on item = "<<index.data().toString();
 
 
-    //Check if the string of the index is "Dictionary_2.2".
-    //If yes, open another GUI.
+    //If the string of the index is "All words" :
     if(index.data().toString() == m_item_1_s){
-        qDebug()<<"m_item_1_s = "<<m_item_1_s;
-
-        //sql_edit_table_view();
-        //m_widget_dict_1.show();
+        m_tree_words_all_f = true;
     }
     else if(index.data().toString() == m_item_2_s){
         qDebug()<<"m_item_2_s = "<<m_item_2_s;
@@ -200,62 +201,6 @@ void MainWindow::config_table_dict_main_window(){
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::table_edit_all_data(QStringList list){
-/*
- * On the main window, edit the table with all SQL data.
- *
- * Improvement : - "m_dict_2_row" can be local ?
- *
- */
-    uint8_t     i_column            = 0;
-    uint16_t    i_list              = 0;
-    uint16_t    position_of_id_data = 0;
-
-    //qDebug()<<"list = "<<list;
-
-    //Edit each cell of the table : -----------------------------------------------------
-    for(i_list = 0 ; i_list < list.size() ; i_list++){
-        //Check if the data is not the id because we don't want to put it on the table.
-        //The id can be used on the popup window with random number.
-        if(i_list != position_of_id_data){
-            m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
-            i_column++;
-        }
-        else{
-            position_of_id_data = position_of_id_data + m_table_main_column_size + 1;
-        }
-
-        if(i_column >= m_table_main_column_size){
-            i_column = 0;//Reset.
-            m_dict_2_row++;//Next edition of the row on the table.
-        }
-    }
-    //-----------------------------------------------------------------------------------
-
-    //Add one empty row at the end (just row and QStandardItem parameter) : -------------
-    m_model_dict_2->setItem(m_dict_2_row,new QStandardItem(""));
-
-    //uint8_t i_column = 0;
-    i_column = 0;
-
-    //Set with empty string each column
-    //otherwise, the code will crash when we click on main add button.
-    //for(i_column=0 ; i_column < 6 ; i_column++){
-    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
-        m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(""));
-    }
-    //-----------------------------------------------------------------------------------
-
-    //Test to read text in a specific row and column.
-    //qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
-
-    m_dict_2_row_last = m_dict_2_row;
-
-    //still used ???
-    m_dict_2_row = 0;//Reset for next open of the table view.
-}
-//-------------------------------------------------------------------------------------------------
-
 void MainWindow::table_edit(ListData list_data){
 /*
  * On the main window, edit the table with SQL data.
@@ -263,13 +208,17 @@ void MainWindow::table_edit(ListData list_data){
  * Input parameter :
  *      - Structure "ListData" with a table that contains QStringList and the size of the table.
  *
- * Improvement : - "m_dict_2_row" can be local ?
+ * Improvement : - Manage data higher than 50 (like on different page)
  *
  */
-    uint8_t     i_column            = 0;
-    uint16_t    i_string_list     = 0;
-    uint16_t    i_list              = 0;
+    uint8_t     i_column        = 0;
+    uint16_t    i_row           = 0;
+    uint16_t    i_string_list   = 0;
+    uint16_t    i_list          = 0;
     QStringList list;
+
+    //Clear first all data on the table.
+    table_clear();
 
     //Extract each cell of the table that contains QStringList : ----------------------------------
     for(i_string_list = 0 ; i_string_list < list_data.size ; i_string_list++){
@@ -278,12 +227,12 @@ void MainWindow::table_edit(ListData list_data){
         //Navigate in to the QStringList to extract useful data.
         //The id number of the SQL data is not useful so, we start at 1 :
         for(i_list = 1 ; i_list < list.size() ; i_list++){
-            m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(list[i_list]));
+            m_model_dict_2->setItem(i_row,i_column,new QStandardItem(list[i_list]));
             i_column++;
 
             if(i_column >= m_table_main_column_size){
                 i_column = 0;//Reset.
-                m_dict_2_row++;//Next edition of the row on the table.
+                i_row++;//Next edition of the row on the table.
             }
         }
 
@@ -292,25 +241,21 @@ void MainWindow::table_edit(ListData list_data){
     //---------------------------------------------------------------------------------------------
 
     //Add one empty row at the end (just row and QStandardItem parameter) : -------------
-    m_model_dict_2->setItem(m_dict_2_row,new QStandardItem(""));
+    m_model_dict_2->setItem(i_row,new QStandardItem(""));
 
-    i_column = 0;
+    //i_column = 0;
 
     //Set with empty string each column
     //otherwise, the code will crash when we click on main add button.
     for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
-        m_model_dict_2->setItem(m_dict_2_row,i_column,new QStandardItem(""));
+        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
     }
     //-----------------------------------------------------------------------------------
 
     //Test to read text in a specific row and column.
-    //qDebug()<<"last row = "<<m_model_dict_2->item(m_dict_2_row - 1,0)->text();
+    //qDebug()<<"last row = "<<m_model_dict_2->item(i_row - 1,0)->text();
 
-    m_dict_2_row_last = m_dict_2_row;
-
-    //still used ???
-    m_dict_2_row = 0;//Reset for next open of the table view.
-
+    m_row_last = i_row;//Save the last number of the row.
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -448,5 +393,53 @@ void MainWindow::receive_string_list(QStringList list){qDebug()<<"receive_string
     //list.size();
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::tree_check_flag(){
+/*
+ *
+ */
+    //!!! Maybe a structur instead of bool flag !!!
+    emit get_tree_flag(m_tree_words_all_f);
+}
+//-------------------------------------------------------------------------------------------------
+
+uint16_t MainWindow::get_row_last() const{
+/*
+ *
+ */
+    return m_row_last;
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::table_clear(){
+/*
+ * Clear each data on the main table with string "";
+ */
+    //uint16_t    i_for       = 0;
+    uint16_t    i_row       = 0;
+    uint16_t    i_column    = 0;
+    uint16_t    row_last    = 0;
+
+    row_last = get_row_last();
+
+    m_model_dict_2->setItem(i_row,new QStandardItem(""));
+
+    for(i_row = 0; i_row < row_last; i_row++){
+        for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
+            m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
+        }
+    }
+
+//    //Add one empty row at the end (just row and QStandardItem parameter) : -------------
+//    m_model_dict_2->setItem(i_row,new QStandardItem(""));
+
+//    //Set with empty string each column
+//    //otherwise, the code will crash when we click on main add button.
+//    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
+//        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
+//    }
+//    //-----------------------------------------------------------------------------------
+}
+
 
 

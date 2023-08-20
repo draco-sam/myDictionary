@@ -28,12 +28,14 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-        void table_edit_all_data(QStringList list);
         void table_edit(ListData list_data);
         void creat_widget_1();
         void creat_widget_2();
+        uint16_t get_row_last() const;
+        void table_clear();
 
     signals:
+        void get_tree_flag(bool flag);
 
     public slots:
         void menu_bar_show_hide(bool change);
@@ -44,7 +46,7 @@ class MainWindow : public QMainWindow
         void widget_test();
         void change_widget();
         void receive_string_list(QStringList list);
-
+        void tree_check_flag();
 
     private:
         Ui::MainWindow              *ui;
@@ -60,11 +62,13 @@ class MainWindow : public QMainWindow
         QWidget                     m_widget_dict_1;
         QString                     m_item_1_s;
         QString                     m_item_2_s;
+        QString                     m_item_3_s;
         QString                     m_item_2_2_s;
+        bool                        m_tree_words_all_f;//A flag.
         int16_t                     m_dict_1_row;
         int16_t                     m_dict_2_row;
         int16_t                     m_dict_1_row_last;
-        int16_t                     m_dict_2_row_last;
+        int16_t                     m_row_last;
         int16_t                     m_dict_1_column;
         uint16_t                    m_sql_row_count;
         uint16_t                    m_random;
