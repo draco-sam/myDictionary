@@ -35,13 +35,13 @@ int main(int argc, char *argv[])
             //!!! Manage data higher than 50 (like on different page) !!!
             main_window.table_edit(sql_db.get_data_all());
         }
-        qDebug()<<"flag = "<<flag;
+        //qDebug()<<"flag = "<<flag;
     });
 
     timer_tree.start(5000);
     //---------------------------------------------------------------------------------------------
 
-
+    sql_db.edit_data("test");
 
     main_window.show();
 

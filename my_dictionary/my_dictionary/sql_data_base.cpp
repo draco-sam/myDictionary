@@ -172,3 +172,63 @@ ListData SqlDataBase::get_data_day(){
 }
 
 //-------------------------------------------------------------------------------------------------
+
+void SqlDataBase::edit_data(QString data){
+/*
+ * !!! Show id on the data base now (26/08/2023) !!!
+ */
+    bool        db_flag         = false;
+    QString     updateQuery     = "";
+
+    db_flag = open_and_check();
+
+    if(db_flag == true){
+        updateQuery = QString("UPDATE dictionary_1 SET image = '%1' WHERE id = %2")
+                        .arg("image/sam")
+                        .arg(10);
+
+        if(m_sql_query->exec(updateQuery)){
+            qDebug()<<"update db OK";
+        }
+        else{
+            qDebug()<<"error with update of db";
+        }
+    }
+    else{
+        qDebug()<<"!!! error with data base !!!";
+    }
+
+
+
+    m_sql_db->close();
+
+}
+//-------------------------------------------------------------------------------------------------
+
+bool SqlDataBase::open_and_check(){
+/*
+ *
+ */
+    bool db_flag = false;
+
+    m_sql_db->close();
+
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
+
+        QMessageBox::critical(nullptr, QObject::tr("Cannot open database"),
+                              QObject::tr("Unable to establish a database connection.\n"
+                                          "This example needs SQLite support. Please read "
+                                          "the Qt SQL driver documentation for information how "
+                                          "to build it.\n\n"
+                                          "Click Cancel to exit."), QMessageBox::Cancel);
+    }
+    else{
+        db_flag = true;
+    }
+
+    return db_flag;
+}
+//-------------------------------------------------------------------------------------------------
+
+
