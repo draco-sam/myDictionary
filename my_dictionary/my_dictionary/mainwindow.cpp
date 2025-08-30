@@ -83,17 +83,19 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //Configure table view on the main window.
     config_table_dict_main_window();
 
-    //Connection between objects : ---------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------
+    //Connection between objects :
+
     connect(ui->checkBox, &QCheckBox::toggled, this, &MainWindow::menu_bar_show_hide);
 
     //Open a specific dictionary when we do a double click on any one items.
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
-    //!!! this connection crash the software (05/08/2023) !!!
-    //connect(ui_table_view_dict->pb_add, &QPushButton::clicked, this, &MainWindow::add_sql_data);
+    // Crash if under other connect, why ???
+    connect(ui->pb_add, &QPushButton::clicked, this, &MainWindow::on_pb_add_clicked);
 
     //connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
-    //--------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------
 
     //Test to get the time of the system : -----------
     m_time = m_time.currentTime();
@@ -256,6 +258,9 @@ void MainWindow::table_edit(ListData list_data){
     //qDebug()<<"last row = "<<m_model_dict_2->item(i_row - 1,0)->text();
 
     m_row_last = i_row;//Save the last number of the row.
+
+    qDebug()<< "last row = "<<m_model_dict_2->rowCount();
+    qDebug()<< "last column = "<<m_model_dict_2->columnCount();
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -441,5 +446,12 @@ void MainWindow::table_clear(){
 //    //-----------------------------------------------------------------------------------
 }
 
+void MainWindow::on_pb_add_clicked(){
+/*
+ *
+ */
+
+    qDebug()<<"clicked";
+}
 
 

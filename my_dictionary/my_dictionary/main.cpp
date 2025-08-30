@@ -43,6 +43,9 @@ int main(int argc, char *argv[])
 
     sql_db.edit_data("test");
 
+    //In test.
+    sql_db.add_data_to_db();
+
     main_window.show();
 
     return a.exec();

@@ -26,6 +26,7 @@ class SqlDataBase : public QObject
         ListData get_data_day();
         void edit_data(QString data);
         bool open_and_check();
+        void add_data_to_db();
 
     signals:
         void send_string_list_signal(QStringList list);//To delete !!!
@@ -36,8 +37,8 @@ class SqlDataBase : public QObject
     private:
         QStringList                 m_list_string;
         QStringList                 m_list_all_string;
-        ListData                     m_list_data_day;
-        ListData                     m_list_data_all;
+        ListData                    m_list_data_day;
+        ListData                    m_list_data_all;
         QSqlQuery                   *m_sql_query;
         QSqlDatabase                *m_sql_db;
         uint8_t                     m_table_main_column_size;

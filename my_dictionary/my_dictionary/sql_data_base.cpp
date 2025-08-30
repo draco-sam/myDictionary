@@ -231,4 +231,52 @@ bool SqlDataBase::open_and_check(){
 }
 //-------------------------------------------------------------------------------------------------
 
+void SqlDataBase::add_data_to_db(){
+/*
+ * add all data at the end of the sql database.
+ */
+    QVariant    lastId          = "";
+    QString     english         = "play";
+    QString     french          = "jouer";
+    QString     family          = "General";
+    QString     frequency       = "10";
+    QString     date            = "29/08/2025";
 
+    if (!m_sql_db->open()) {
+        qDebug()<<"Cannot open database";
+
+        //return;
+    }
+
+    // ------------------------------------------------------------------------
+    //Get the value of the last id of the database :
+
+    if (m_sql_query->exec("SELECT MAX(Id) FROM dictionary_1")) {
+        if (m_sql_query->next()) {
+            lastId = m_sql_query->value(0).toInt() + 1;
+            qDebug() << "Le dernier Id est : " << lastId.toInt();
+        } else {
+            qDebug() << "La table est vide.";
+        }
+    } else {
+        qDebug() << "Erreur de requête";
+    }
+    //-------------------------------------------------------------------------
+
+    m_sql_query->prepare("INSERT INTO dictionary_1 (id, english, french, family, frequency, date) "
+                         "VALUES (:lastId, :english, :french, :family, :frequency, :date)");
+
+    m_sql_query->bindValue(":lastId", lastId);
+    m_sql_query->bindValue(":english", english);
+    m_sql_query->bindValue(":french", french);
+    m_sql_query->bindValue(":family", family);
+    m_sql_query->bindValue(":frequency", frequency);
+    m_sql_query->bindValue(":date", date);
+
+    if (m_sql_query->exec()) {
+        qDebug() << "Nouvelle ligne ajoutée avec succès.";
+    } else {
+        qDebug() << "Erreur d'insertion";
+    }
+}
+//-------------------------------------------------------------------------------------------------

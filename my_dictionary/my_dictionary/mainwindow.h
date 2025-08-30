@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow
         void change_widget();
         void receive_string_list(QStringList list);
         void tree_check_flag();
+        void on_pb_add_clicked();
 
     private:
         Ui::MainWindow              *ui;

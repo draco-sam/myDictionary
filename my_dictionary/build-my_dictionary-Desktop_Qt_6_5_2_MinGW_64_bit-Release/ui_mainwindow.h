@@ -40,8 +40,10 @@ public:
     QTreeView *treeView;
     QTableView *table_data_base;
     QHBoxLayout *horizontalLayout;
-    QPushButton *button_main_add;
-    QPushButton *button_main_delete;
+    QPushButton *pb_db_begin;
+    QPushButton *pb_db_previous;
+    QPushButton *pb_db_next;
+    QPushButton *pb_db_end;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdition;
@@ -54,8 +56,8 @@ public:
     QVBoxLayout *verticalLayout_2;
     QVBoxLayout *verticalLayout;
     QCheckBox *checkBox;
-    QPushButton *pushButton_2;
-    QPushButton *pushButton;
+    QPushButton *pb_delete;
+    QPushButton *pb_add;
     QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -98,27 +100,34 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName("horizontalLayout");
-        button_main_add = new QPushButton(centralwidget);
-        button_main_add->setObjectName("button_main_add");
-        QFont font;
-        font.setBold(false);
-        button_main_add->setFont(font);
+        pb_db_begin = new QPushButton(centralwidget);
+        pb_db_begin->setObjectName("pb_db_begin");
 
-        horizontalLayout->addWidget(button_main_add);
+        horizontalLayout->addWidget(pb_db_begin);
 
-        button_main_delete = new QPushButton(centralwidget);
-        button_main_delete->setObjectName("button_main_delete");
+        pb_db_previous = new QPushButton(centralwidget);
+        pb_db_previous->setObjectName("pb_db_previous");
 
-        horizontalLayout->addWidget(button_main_delete);
+        horizontalLayout->addWidget(pb_db_previous);
+
+        pb_db_next = new QPushButton(centralwidget);
+        pb_db_next->setObjectName("pb_db_next");
+
+        horizontalLayout->addWidget(pb_db_next);
+
+        pb_db_end = new QPushButton(centralwidget);
+        pb_db_end->setObjectName("pb_db_end");
+
+        horizontalLayout->addWidget(pb_db_end);
 
 
-        gridLayout->addLayout(horizontalLayout, 1, 0, 1, 2);
+        gridLayout->addLayout(horizontalLayout, 1, 1, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
         menubar->setEnabled(true);
-        menubar->setGeometry(QRect(0, 0, 818, 30));
+        menubar->setGeometry(QRect(0, 0, 818, 27));
         menuFile = new QMenu(menubar);
         menuFile->setObjectName("menuFile");
         menuEdition = new QMenu(menubar);
@@ -136,7 +145,7 @@ public:
         dockWidget_2 = new QDockWidget(MainWindow);
         dockWidget_2->setObjectName("dockWidget_2");
         dockWidget_2->setEnabled(true);
-        dockWidget_2->setMinimumSize(QSize(185, 180));
+        dockWidget_2->setMinimumSize(QSize(185, 228));
         QIcon icon1;
         iconThemeName = QString::fromUtf8("accessories-calculator");
         if (QIcon::hasThemeIcon(iconThemeName)) {
@@ -159,15 +168,18 @@ public:
 
         verticalLayout->addWidget(checkBox);
 
-        pushButton_2 = new QPushButton(dockWidgetContents_2);
-        pushButton_2->setObjectName("pushButton_2");
+        pb_delete = new QPushButton(dockWidgetContents_2);
+        pb_delete->setObjectName("pb_delete");
 
-        verticalLayout->addWidget(pushButton_2);
+        verticalLayout->addWidget(pb_delete);
 
-        pushButton = new QPushButton(dockWidgetContents_2);
-        pushButton->setObjectName("pushButton");
+        pb_add = new QPushButton(dockWidgetContents_2);
+        pb_add->setObjectName("pb_add");
+        QFont font;
+        font.setBold(false);
+        pb_add->setFont(font);
 
-        verticalLayout->addWidget(pushButton);
+        verticalLayout->addWidget(pb_add);
 
 
         verticalLayout_2->addLayout(verticalLayout);
@@ -197,8 +209,10 @@ public:
 #if QT_CONFIG(tooltip)
         actionTest->setToolTip(QCoreApplication::translate("MainWindow", "Bonjour info bulle", nullptr));
 #endif // QT_CONFIG(tooltip)
-        button_main_add->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
-        button_main_delete->setText(QCoreApplication::translate("MainWindow", "Delete", nullptr));
+        pb_db_begin->setText(QCoreApplication::translate("MainWindow", "<<", nullptr));
+        pb_db_previous->setText(QCoreApplication::translate("MainWindow", "<", nullptr));
+        pb_db_next->setText(QCoreApplication::translate("MainWindow", ">", nullptr));
+        pb_db_end->setText(QCoreApplication::translate("MainWindow", ">>", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuEdition->setTitle(QCoreApplication::translate("MainWindow", "Edition", nullptr));
         menuView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
@@ -206,8 +220,8 @@ public:
         menuHelp->setTitle(QCoreApplication::translate("MainWindow", "Help", nullptr));
         dockWidget_2->setWindowTitle(QCoreApplication::translate("MainWindow", "Games", nullptr));
         checkBox->setText(QCoreApplication::translate("MainWindow", "Show Menu Bar", nullptr));
-        pushButton_2->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+        pb_delete->setText(QCoreApplication::translate("MainWindow", "Delete", nullptr));
+        pb_add->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 
