@@ -231,16 +231,21 @@ bool SqlDataBase::open_and_check(){
 }
 //-------------------------------------------------------------------------------------------------
 
-void SqlDataBase::add_data_to_db(){
+void SqlDataBase::add_data_to_db(QStringList s_list){
 /*
  * add all data at the end of the sql database.
  */
-    QVariant    lastId          = "";
-    QString     english         = "play";
-    QString     french          = "jouer";
-    QString     family          = "General";
-    QString     frequency       = "10";
-    QString     date            = "29/08/2025";
+    QVariant    lastId              = "";
+    QString     english             = s_list[0];
+    QString     french              = s_list[1];
+    QString     family              = s_list[2];
+    QString     frequency           = s_list[3];
+    QString     date                = s_list[4];
+    QString     image               = s_list[5];
+    QString     syllable            = s_list[6];
+    QString     sentence            = s_list[7];
+    QString     visibility_english  = s_list[8];
+    QString     visibility_french   = s_list[9];
 
     if (!m_sql_db->open()) {
         qDebug()<<"Cannot open database";
@@ -263,8 +268,10 @@ void SqlDataBase::add_data_to_db(){
     }
     //-------------------------------------------------------------------------
 
-    m_sql_query->prepare("INSERT INTO dictionary_1 (id, english, french, family, frequency, date) "
-                         "VALUES (:lastId, :english, :french, :family, :frequency, :date)");
+    m_sql_query->prepare("INSERT INTO dictionary_1 (id, english, french, family, frequency, date, image, syllable,"
+                         "sentence, visibility_english, visibility_french) "
+                         "VALUES (:lastId, :english, :french, :family, :frequency, :date, :image, :syllable,"
+                         ":sentence, :visibility_english, :visibility_french)");
 
     m_sql_query->bindValue(":lastId", lastId);
     m_sql_query->bindValue(":english", english);
@@ -272,6 +279,11 @@ void SqlDataBase::add_data_to_db(){
     m_sql_query->bindValue(":family", family);
     m_sql_query->bindValue(":frequency", frequency);
     m_sql_query->bindValue(":date", date);
+    m_sql_query->bindValue(":image", image);
+    m_sql_query->bindValue(":syllable", syllable);
+    m_sql_query->bindValue(":sentence", sentence);
+    m_sql_query->bindValue(":visibility_english", visibility_english);
+    m_sql_query->bindValue(":visibility_french", visibility_french);
 
     if (m_sql_query->exec()) {
         qDebug() << "Nouvelle ligne ajoutée avec succès.";

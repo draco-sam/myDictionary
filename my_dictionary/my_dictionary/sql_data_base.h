@@ -26,7 +26,7 @@ class SqlDataBase : public QObject
         ListData get_data_day();
         void edit_data(QString data);
         bool open_and_check();
-        void add_data_to_db();
+        void add_data_to_db(QStringList s_list);
 
     signals:
         void send_string_list_signal(QStringList list);//To delete !!!

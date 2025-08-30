@@ -38,13 +38,15 @@ int main(int argc, char *argv[])
         //qDebug()<<"flag = "<<flag;
     });
 
+    QObject::connect(&main_window, &MainWindow::add_data_to_database, &sql_db, &SqlDataBase::add_data_to_db);
+
     timer_tree.start(5000);
     //---------------------------------------------------------------------------------------------
 
     sql_db.edit_data("test");
 
     //In test.
-    sql_db.add_data_to_db();
+    //sql_db.add_data_to_db();
 
     main_window.show();
 

@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //Open a specific dictionary when we do a double click on any one items.
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
-    // Crash if under other connect, why ???
-    connect(ui->pb_add, &QPushButton::clicked, this, &MainWindow::on_pb_add_clicked);
+    //
+    connect(ui->pb_add, &QPushButton::clicked, this, &MainWindow::handle_pb_add_clicked);
 
     //connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
     //------------------------------------------------------------------------------------------------------------
@@ -258,9 +258,6 @@ void MainWindow::table_edit(ListData list_data){
     //qDebug()<<"last row = "<<m_model_dict_2->item(i_row - 1,0)->text();
 
     m_row_last = i_row;//Save the last number of the row.
-
-    qDebug()<< "last row = "<<m_model_dict_2->rowCount();
-    qDebug()<< "last column = "<<m_model_dict_2->columnCount();
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -446,12 +443,36 @@ void MainWindow::table_clear(){
 //    //-----------------------------------------------------------------------------------
 }
 
-void MainWindow::on_pb_add_clicked(){
+void MainWindow::handle_pb_add_clicked(){
 /*
  *
  */
+    int         last_row_num    = 0;
+    int         last_column_num = 0;
+    ListData    list;
+    QVariant    data;
+    QStringList s_list;
 
     qDebug()<<"clicked";
+
+    qDebug()<< "last row = "<<m_model_dict_2->rowCount();
+    qDebug()<< "last column = "<<m_model_dict_2->columnCount();
+
+    last_row_num = m_model_dict_2->rowCount() - 1;
+    last_column_num = m_model_dict_2->columnCount();
+
+    for(int i = 0 ; i < last_column_num ; i++){
+        data = m_model_dict_2->data(m_model_dict_2->index(last_row_num,i));
+        s_list.append(data.toString());
+        //list.table[i] = data.toStringList();
+
+        qDebug()<<i<<" = "<<data.toString();
+    }
+
+    qDebug()<<"s_list = "<<s_list;
+    qDebug()<<"s_list[0] = "<<s_list[0];
+
+    emit add_data_to_database(s_list);
 }
 
 

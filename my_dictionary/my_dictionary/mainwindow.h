@@ -36,6 +36,7 @@ class MainWindow : public QMainWindow
 
     signals:
         void get_tree_flag(bool flag);
+        void add_data_to_database(QStringList data);
 
     public slots:
         void menu_bar_show_hide(bool change);
@@ -47,7 +48,7 @@ class MainWindow : public QMainWindow
         void change_widget();
         void receive_string_list(QStringList list);
         void tree_check_flag();
-        void on_pb_add_clicked();
+        void handle_pb_add_clicked();
 
     private:
         Ui::MainWindow              *ui;
