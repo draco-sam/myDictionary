@@ -8,6 +8,7 @@
 #include "QSqlQuery"
 #include "QMessageBox"
 #include "list_data_struct.h"
+#include <QTime>
 
 //struct ListDay{
 //    QStringList table[50];
@@ -30,6 +31,7 @@ class SqlDataBase : public QObject
 
     signals:
         void send_string_list_signal(QStringList list);//To delete !!!
+        void send_message_to_status_bar(QString message);
 
     public slots:
 
@@ -45,6 +47,7 @@ class SqlDataBase : public QObject
         uint8_t                     m_table_day_column_size;
         uint8_t                     m_table_all_column_size;//Use same virable for day et all ???
         uint8_t                     m_column_frequency_num;
+        QTime                       m_current_time;
 };
 
 #endif // SQLDATABASE_H

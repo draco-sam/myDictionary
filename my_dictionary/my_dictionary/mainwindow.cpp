@@ -32,13 +32,14 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     m_frequency(0),m_frequency_s(""),m_word_english(""),m_word_french(""),m_word_same_f(0),
     m_word_same_counter(0),m_nb_of_word(0),
     m_popup_f_first_time(0),m_popup_f_show(0),m_timer_widget(0),m_table_view_1(NULL),m_time(),
-    m_table_main_column_size(10)
+    m_table_main_column_size(10),m_flag_color(0)
 /*
  *
  */
 {
     ui->setupUi(this);
 
+    ui->statusbar->showMessage("bonjour");
 
     //ui->menubar->hide();
     //ui->checkBox->toggled();
@@ -100,7 +101,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //Test to get the time of the system : -----------
     m_time = m_time.currentTime();
 
-    qDebug()<<"time = "<<m_time.currentTime();
+    qDebug()<<"time = "<<m_time.currentTime().toString();
     qDebug()<<"hour = "<<m_time.hour();
     //------------------------------------------------
 
@@ -218,6 +219,7 @@ void MainWindow::table_edit(ListData list_data){
     uint16_t    i_string_list   = 0;
     uint16_t    i_list          = 0;
     QStringList list;
+    //Qt::ItemFlag    flags;
 
     //Clear first all data on the table.
     table_clear();
@@ -242,10 +244,36 @@ void MainWindow::table_edit(ListData list_data){
     }
     //---------------------------------------------------------------------------------------------
 
-    //Add one empty row at the end (just row and QStandardItem parameter) : -------------
-    m_model_dict_2->setItem(i_row,new QStandardItem(""));
+    //-----------------------------------------------------------------------------------
+    //Add empty cells, not editable :
+    //m_model_dict_2->setItem(i_row,new QStandardItem(""));
 
-    //i_column = 0;
+    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
+        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
+
+        //---------------------------------------------------------------------
+        //Cellule non éditable :
+        QStandardItem *item = m_model_dict_2->item(i_row, i_column);
+        if (item) {
+            item->setBackground(QColor(Qt::lightGray));
+
+            // Récupérer les flags actuels de l'élément
+            Qt::ItemFlags flags = item->flags();
+
+            // Enlever le flag Qt::ItemIsEditable
+            flags &= ~Qt::ItemIsEditable;
+
+            // Appliquer les nouveaux flags
+            item->setFlags(flags);
+        }
+        //---------------------------------------------------------------------
+    }
+    //-----------------------------------------------------------------------------------
+
+    i_row++;//For editable last row.
+
+    //-----------------------------------------------------------------------------------
+    //Add one empty row at the end (just row and QStandardItem parameter) :
 
     //Set with empty string each column
     //otherwise, the code will crash when we click on main add button.
@@ -442,6 +470,7 @@ void MainWindow::table_clear(){
 //    }
 //    //-----------------------------------------------------------------------------------
 }
+//-------------------------------------------------------------------------------------------------
 
 void MainWindow::handle_pb_add_clicked(){
 /*
@@ -452,6 +481,7 @@ void MainWindow::handle_pb_add_clicked(){
     ListData    list;
     QVariant    data;
     QStringList s_list;
+    QColor      color(255,255,153);//Pale yellow.
 
     qDebug()<<"clicked";
 
@@ -467,6 +497,23 @@ void MainWindow::handle_pb_add_clicked(){
         //list.table[i] = data.toStringList();
 
         qDebug()<<i<<" = "<<data.toString();
+
+        //Change the color of the last row, when SQL database updated.
+        if(m_flag_color == YELLOW_CEll){
+            color = QColor(255,255,153);//Pale yellow.
+        }
+        else{
+            color = QColor(255,204,153);//Pale orange.
+        }
+        m_model_dict_2->item(last_row_num,i)->setBackground(color);
+    }
+
+    //Change de color for next update :
+    if(m_flag_color == YELLOW_CEll){
+        m_flag_color = ORANGE_CEll;
+    }
+    else{
+        m_flag_color = YELLOW_CEll;//Go back to yellow on next update.
     }
 
     qDebug()<<"s_list = "<<s_list;
@@ -474,5 +521,14 @@ void MainWindow::handle_pb_add_clicked(){
 
     emit add_data_to_database(s_list);
 }
+//-------------------------------------------------------------------------------------------------
 
+void MainWindow::show_message_to_status_bar(QString message){
+/*
+ * Slots to display a message on the status bar of the main window.
+ */
+    ui->statusbar->showMessage(message);
+}
+
+//-------------------------------------------------------------------------------------------------
 

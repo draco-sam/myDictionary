@@ -58,11 +58,13 @@ static constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers:
     "receive_string_list",
     "list",
     "tree_check_flag",
-    "handle_pb_add_clicked"
+    "handle_pb_add_clicked",
+    "show_message_to_status_bar",
+    "message"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {
-    uint offsetsAndSizes[40];
+    uint offsetsAndSizes[44];
     char stringdata0[11];
     char stringdata1[14];
     char stringdata2[1];
@@ -83,6 +85,8 @@ struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {
     char stringdata17[5];
     char stringdata18[16];
     char stringdata19[22];
+    char stringdata20[27];
+    char stringdata21[8];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSMainWindowENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -107,7 +111,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSMainWindowENDCLASS_t qt_meta_st
         QT_MOC_LITERAL(216, 19),  // "receive_string_list"
         QT_MOC_LITERAL(236, 4),  // "list"
         QT_MOC_LITERAL(241, 15),  // "tree_check_flag"
-        QT_MOC_LITERAL(257, 21)   // "handle_pb_add_clicked"
+        QT_MOC_LITERAL(257, 21),  // "handle_pb_add_clicked"
+        QT_MOC_LITERAL(279, 26),  // "show_message_to_status_bar"
+        QT_MOC_LITERAL(306, 7)   // "message"
     },
     "MainWindow",
     "get_tree_flag",
@@ -128,7 +134,9 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSMainWindowENDCLASS_t qt_meta_st
     "receive_string_list",
     "list",
     "tree_check_flag",
-    "handle_pb_add_clicked"
+    "handle_pb_add_clicked",
+    "show_message_to_status_bar",
+    "message"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -140,7 +148,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
       11,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      13,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -148,20 +156,21 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
        2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   86,    2, 0x06,    1 /* Public */,
-       4,    1,   89,    2, 0x06,    3 /* Public */,
+       1,    1,   92,    2, 0x06,    1 /* Public */,
+       4,    1,   95,    2, 0x06,    3 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       6,    1,   92,    2, 0x0a,    5 /* Public */,
-       8,    0,   95,    2, 0x0a,    7 /* Public */,
-       9,    1,   96,    2, 0x0a,    8 /* Public */,
-      12,    0,   99,    2, 0x0a,   10 /* Public */,
-      13,    0,  100,    2, 0x0a,   11 /* Public */,
-      14,    0,  101,    2, 0x0a,   12 /* Public */,
-      15,    0,  102,    2, 0x0a,   13 /* Public */,
-      16,    1,  103,    2, 0x0a,   14 /* Public */,
-      18,    0,  106,    2, 0x0a,   16 /* Public */,
-      19,    0,  107,    2, 0x0a,   17 /* Public */,
+       6,    1,   98,    2, 0x0a,    5 /* Public */,
+       8,    0,  101,    2, 0x0a,    7 /* Public */,
+       9,    1,  102,    2, 0x0a,    8 /* Public */,
+      12,    0,  105,    2, 0x0a,   10 /* Public */,
+      13,    0,  106,    2, 0x0a,   11 /* Public */,
+      14,    0,  107,    2, 0x0a,   12 /* Public */,
+      15,    0,  108,    2, 0x0a,   13 /* Public */,
+      16,    1,  109,    2, 0x0a,   14 /* Public */,
+      18,    0,  112,    2, 0x0a,   16 /* Public */,
+      19,    0,  113,    2, 0x0a,   17 /* Public */,
+      20,    1,  114,    2, 0x0a,   18 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Bool,    3,
@@ -178,6 +187,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
     QMetaType::Void, QMetaType::QStringList,   17,
     QMetaType::Void,
     QMetaType::Void,
+    QMetaType::Void, QMetaType::QString,   21,
 
        0        // eod
 };
@@ -219,7 +229,10 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'tree_check_flag'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'handle_pb_add_clicked'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'show_message_to_status_bar'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<QString, std::false_type>
     >,
     nullptr
 } };
@@ -242,6 +255,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 9: _t->receive_string_list((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
         case 10: _t->tree_check_flag(); break;
         case 11: _t->handle_pb_add_clicked(); break;
+        case 12: _t->show_message_to_status_bar((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -282,13 +296,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 13)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 13;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 13)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 12;
+        _id -= 13;
     }
     return _id;
 }

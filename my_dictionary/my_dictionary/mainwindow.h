@@ -15,7 +15,8 @@
 #include "list_data_struct.h"
 
 #define ALL_SQL_DATA        0
-
+#define YELLOW_CEll         0
+#define ORANGE_CEll         1
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -49,6 +50,7 @@ class MainWindow : public QMainWindow
         void receive_string_list(QStringList list);
         void tree_check_flag();
         void handle_pb_add_clicked();
+        void show_message_to_status_bar(QString message);
 
     private:
         Ui::MainWindow              *ui;
@@ -103,5 +105,6 @@ class MainWindow : public QMainWindow
         QTime                       m_time;//To get the current time.
         uint8_t                     m_table_main_column_size;
         ListData                    m_list_data;
+        uint8_t                     m_flag_color;
 };
 #endif // MAINWINDOW_H

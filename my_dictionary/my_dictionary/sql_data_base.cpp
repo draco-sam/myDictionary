@@ -25,6 +25,8 @@ SqlDataBase::SqlDataBase():
 
     m_sql_query = new QSqlQuery(*m_sql_db);
 
+    m_current_time = QTime::currentTime();//Initialisation.
+    //qDebug()<<"m_current_time = "<<m_current_time.toString();
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -287,6 +289,8 @@ void SqlDataBase::add_data_to_db(QStringList s_list){
 
     if (m_sql_query->exec()) {
         qDebug() << "Nouvelle ligne ajoutée avec succès.";
+
+        emit send_message_to_status_bar("SQL database is updated : " + m_current_time.currentTime().toString());
     } else {
         qDebug() << "Erreur d'insertion";
     }
