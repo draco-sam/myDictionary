@@ -20,7 +20,6 @@
 #include "ui_mainwindow.h"
 
 
-//MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     ui(new Ui::MainWindow),ui_table_view_dict(new Ui::Table_view_dict),
 
@@ -94,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
 
     //
     connect(ui->pb_add, &QPushButton::clicked, this, &MainWindow::handle_pb_add_clicked);
+    connect(ui->pb_db_next, &QPushButton::clicked, this, &MainWindow::handle_pb_db_next_clicked);
 
     //connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
     //------------------------------------------------------------------------------------------------------------
@@ -522,6 +522,23 @@ void MainWindow::handle_pb_add_clicked(){
     emit add_data_to_database(s_list);
 }
 //-------------------------------------------------------------------------------------------------
+
+void MainWindow::handle_pb_db_next_clicked(){
+/*
+ *
+ */
+    qDebug()<<"pb_db_next_clicked";
+
+    emit show_next_page();
+}
+//-------------------------------------------------------------------------------------------------
+
+void MainWindow::main_table_update(ListData list){
+/*
+ *
+ */
+    table_edit(list);
+}
 
 void MainWindow::show_message_to_status_bar(QString message){
 /*

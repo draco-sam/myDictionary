@@ -38,6 +38,7 @@ class MainWindow : public QMainWindow
     signals:
         void get_tree_flag(bool flag);
         void add_data_to_database(QStringList data);
+        void show_next_page();
 
     public slots:
         void menu_bar_show_hide(bool change);
@@ -49,8 +50,11 @@ class MainWindow : public QMainWindow
         void change_widget();
         void receive_string_list(QStringList list);
         void tree_check_flag();
-        void handle_pb_add_clicked();
         void show_message_to_status_bar(QString message);
+        void handle_pb_add_clicked();
+        void handle_pb_db_next_clicked();
+        void main_table_update(ListData list);
+
 
     private:
         Ui::MainWindow              *ui;

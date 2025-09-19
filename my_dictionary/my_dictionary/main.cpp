@@ -1,3 +1,8 @@
+/*
+ * Vérifier tâches à l'adresse : https://github.com/users/draco-sam/projects/2
+ */
+
+
 #include "mainwindow.h"
 #include "sql_data_base.h"
 #include "windowpopup.h"
@@ -18,8 +23,8 @@ int main(int argc, char *argv[])
     main_window.setWindowState(Qt::WindowMaximized);
 
     //A startup of the main window, edit the main table with data of the day :
-    main_window.table_edit(sql_db.get_data_day());
-    //main_window.table_edit(sql_db.get_data_all());
+    //main_window.table_edit(sql_db.get_data_day());
+    main_window.table_edit(sql_db.get_data_all());
 
     WindowPopUp win_popup;
     win_popup.set_list_day(sql_db.get_data_day());
@@ -41,13 +46,13 @@ int main(int argc, char *argv[])
     QObject::connect(&main_window, &MainWindow::add_data_to_database, &sql_db, &SqlDataBase::add_data_to_db);
     QObject::connect(&sql_db, &SqlDataBase::send_message_to_status_bar, &main_window, &MainWindow::show_message_to_status_bar);
 
+    QObject::connect(&main_window, &MainWindow::show_next_page, &sql_db, &SqlDataBase::ask_next_data);
+    QObject::connect(&sql_db, &SqlDataBase::send_next_list, &main_window, &MainWindow::main_table_update);
+
     timer_tree.start(5000);
     //---------------------------------------------------------------------------------------------
 
     sql_db.edit_data("test");
-
-    //In test.
-    //sql_db.add_data_to_db();
 
     main_window.show();
 

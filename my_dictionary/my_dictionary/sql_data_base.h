@@ -32,8 +32,10 @@ class SqlDataBase : public QObject
     signals:
         void send_string_list_signal(QStringList list);//To delete !!!
         void send_message_to_status_bar(QString message);
+        void send_next_list(ListData);
 
     public slots:
+        void ask_next_data();
 
 
     private:
@@ -48,6 +50,8 @@ class SqlDataBase : public QObject
         uint8_t                     m_table_all_column_size;//Use same virable for day et all ???
         uint8_t                     m_column_frequency_num;
         QTime                       m_current_time;
+        uint16_t                    m_current_offset;
+        uint8_t                     m_page_size;
 };
 
 #endif // SQLDATABASE_H

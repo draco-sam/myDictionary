@@ -14,7 +14,7 @@
 
 SqlDataBase::SqlDataBase():
     m_sql_query(0),m_sql_db(0),m_table_main_column_size(11),m_table_day_column_size(11),
-    m_table_all_column_size(11),m_column_frequency_num(4)
+    m_table_all_column_size(11),m_column_frequency_num(4),m_current_offset(0),m_page_size(50)
 
 {
 /*
@@ -59,6 +59,13 @@ ListData SqlDataBase::get_data_all(){
     uint16_t        table_size  = 0;
     QStringList     list_temporary;
 
+    //m_currentOffset = m_currentOffset + m_page_size;
+
+    QString queryString = QString("SELECT id, english,french,family,frequency,date,image,syllable,"
+                                  "sentence,visibility_english,visibility_french FROM dictionary_1 ORDER BY Id LIMIT %1 OFFSET %2")
+                              .arg(m_page_size)
+                              .arg(m_current_offset);
+
     table_size = m_list_data_all.size;
 
     if (!m_sql_db->open()) {
@@ -72,8 +79,8 @@ ListData SqlDataBase::get_data_all(){
                                           "Click Cancel to exit."), QMessageBox::Cancel);
     }
 
-    m_sql_query->exec("SELECT id, english,french,family,frequency,date,image,syllable,"
-                      "sentence,visibility_english,visibility_french FROM dictionary_1");
+    m_sql_query->exec(queryString);
+
 
     //??? Not working, why ???
     //qDebug()<<"nb of column with record() = "<<m_sql_query->record().count();
@@ -106,11 +113,10 @@ ListData SqlDataBase::get_data_all(){
 
     m_sql_db->close();
 
-    m_list_data_all.size = line_number;
+    m_list_data_all.size = line_number;qDebug()<<"line_number = "<<line_number;
 
     return m_list_data_all;
 }
-
 //-------------------------------------------------------------------------------------------------
 
 ListData SqlDataBase::get_data_day(){
@@ -295,4 +301,21 @@ void SqlDataBase::add_data_to_db(QStringList s_list){
         qDebug() << "Erreur d'insertion";
     }
 }
-//-------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------
+
+void SqlDataBase::ask_next_data(){
+/*
+ * Slot to ask the sql database for the next 50 words.
+ * The signal is emmitted on the main.cpp, by the mainwindow object.
+ */
+    //ListData get_data_all();
+
+    ListData list;
+
+    m_current_offset = m_current_offset + m_page_size;
+
+    list = get_data_all();
+
+    emit send_next_list(list);
+}
+//---------------------------------------------------------------------------------------------------------------------

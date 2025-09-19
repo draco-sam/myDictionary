@@ -4,8 +4,8 @@
 #include <QStringList>
 
 struct ListData{
-    QStringList table[50];
-    uint16_t    size = 50;
+    QStringList table[4096];
+    uint16_t    size = 4096;
 };
 
 #endif // LIST_DATA_STRUCT_H

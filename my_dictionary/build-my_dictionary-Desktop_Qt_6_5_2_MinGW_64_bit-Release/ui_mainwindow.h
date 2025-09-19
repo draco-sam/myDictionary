@@ -18,6 +18,7 @@
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -37,13 +38,14 @@ public:
     QAction *actionTest;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
-    QTreeView *treeView;
-    QTableView *table_data_base;
     QHBoxLayout *horizontalLayout;
     QPushButton *pb_db_begin;
     QPushButton *pb_db_previous;
+    QLineEdit *line_current_page_num;
     QPushButton *pb_db_next;
     QPushButton *pb_db_end;
+    QTableView *table_data_base;
+    QTreeView *treeView;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdition;
@@ -79,25 +81,6 @@ public:
         centralwidget->setObjectName("centralwidget");
         gridLayout = new QGridLayout(centralwidget);
         gridLayout->setObjectName("gridLayout");
-        treeView = new QTreeView(centralwidget);
-        treeView->setObjectName("treeView");
-        treeView->setEnabled(true);
-        treeView->setMaximumSize(QSize(150, 16777215));
-        treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        treeView->setAutoExpandDelay(-1);
-        treeView->setRootIsDecorated(true);
-        treeView->setAnimated(true);
-        treeView->setAllColumnsShowFocus(false);
-        treeView->setHeaderHidden(true);
-        treeView->setExpandsOnDoubleClick(true);
-
-        gridLayout->addWidget(treeView, 0, 0, 1, 1);
-
-        table_data_base = new QTableView(centralwidget);
-        table_data_base->setObjectName("table_data_base");
-
-        gridLayout->addWidget(table_data_base, 0, 1, 1, 1);
-
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName("horizontalLayout");
         pb_db_begin = new QPushButton(centralwidget);
@@ -109,6 +92,14 @@ public:
         pb_db_previous->setObjectName("pb_db_previous");
 
         horizontalLayout->addWidget(pb_db_previous);
+
+        line_current_page_num = new QLineEdit(centralwidget);
+        line_current_page_num->setObjectName("line_current_page_num");
+        line_current_page_num->setMaximumSize(QSize(100, 16777215));
+        line_current_page_num->setAlignment(Qt::AlignCenter);
+        line_current_page_num->setReadOnly(true);
+
+        horizontalLayout->addWidget(line_current_page_num);
 
         pb_db_next = new QPushButton(centralwidget);
         pb_db_next->setObjectName("pb_db_next");
@@ -122,6 +113,25 @@ public:
 
 
         gridLayout->addLayout(horizontalLayout, 1, 1, 1, 1);
+
+        table_data_base = new QTableView(centralwidget);
+        table_data_base->setObjectName("table_data_base");
+
+        gridLayout->addWidget(table_data_base, 0, 1, 1, 1);
+
+        treeView = new QTreeView(centralwidget);
+        treeView->setObjectName("treeView");
+        treeView->setEnabled(true);
+        treeView->setMaximumSize(QSize(150, 16777215));
+        treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        treeView->setAutoExpandDelay(-1);
+        treeView->setRootIsDecorated(true);
+        treeView->setAnimated(true);
+        treeView->setAllColumnsShowFocus(false);
+        treeView->setHeaderHidden(true);
+        treeView->setExpandsOnDoubleClick(true);
+
+        gridLayout->addWidget(treeView, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -209,10 +219,11 @@ public:
 #if QT_CONFIG(tooltip)
         actionTest->setToolTip(QCoreApplication::translate("MainWindow", "Bonjour info bulle", nullptr));
 #endif // QT_CONFIG(tooltip)
-        pb_db_begin->setText(QCoreApplication::translate("MainWindow", "<<", nullptr));
-        pb_db_previous->setText(QCoreApplication::translate("MainWindow", "<", nullptr));
-        pb_db_next->setText(QCoreApplication::translate("MainWindow", ">", nullptr));
-        pb_db_end->setText(QCoreApplication::translate("MainWindow", ">>", nullptr));
+        pb_db_begin->setText(QCoreApplication::translate("MainWindow", "<< (1)", nullptr));
+        pb_db_previous->setText(QCoreApplication::translate("MainWindow", "< (2)", nullptr));
+        line_current_page_num->setText(QCoreApplication::translate("MainWindow", "3", nullptr));
+        pb_db_next->setText(QCoreApplication::translate("MainWindow", " (4) >", nullptr));
+        pb_db_end->setText(QCoreApplication::translate("MainWindow", "(50) >>", nullptr));
         menuFile->setTitle(QCoreApplication::translate("MainWindow", "File", nullptr));
         menuEdition->setTitle(QCoreApplication::translate("MainWindow", "Edition", nullptr));
         menuView->setTitle(QCoreApplication::translate("MainWindow", "View", nullptr));
