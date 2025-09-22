@@ -91,9 +91,9 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     //Open a specific dictionary when we do a double click on any one items.
     connect(ui->treeView, &QTreeView::doubleClicked, this, &MainWindow::dict_item_double_clicked);
 
-    //
-    connect(ui->pb_add, &QPushButton::clicked, this, &MainWindow::handle_pb_add_clicked);
     connect(ui->pb_db_next, &QPushButton::clicked, this, &MainWindow::handle_pb_db_next_clicked);
+
+    connect(ui->table_add->verticalHeader(), &QHeaderView::sectionClicked, this, &::MainWindow::handle_table_header_selection);
 
     //connect(m_timer_popup, &QTimer::timeout, this, &MainWindow::window_popup_show);
     //------------------------------------------------------------------------------------------------------------
@@ -104,7 +104,6 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent),
     qDebug()<<"time = "<<m_time.currentTime().toString();
     qDebug()<<"hour = "<<m_time.hour();
     //------------------------------------------------
-
 }
 
 MainWindow::~MainWindow()
@@ -472,43 +471,63 @@ void MainWindow::table_clear(){
 }
 //-------------------------------------------------------------------------------------------------
 
-void MainWindow::handle_pb_add_clicked(){
+void MainWindow::handle_table_header_selection(int row) {
 /*
- *
+ * On the table_add, if the header add si selected, a signal is emitted to this slot.
  */
-    int         last_row_num    = 0;
-    int         last_column_num = 0;
-    ListData    list;
-    QVariant    data;
-    QStringList s_list;
-    QColor      color(255,255,153);//Pale yellow.
 
-    qDebug()<<"clicked";
+    qDebug() << "header add on row " << row << " is selected";
 
-    qDebug()<< "last row = "<<m_model_dict_2->rowCount();
-    qDebug()<< "last column = "<<m_model_dict_2->columnCount();
+    if(row == 0){
+        get_words_on_table_add();
+    }
+}
+//-------------------------------------------------------------------------------------------------
 
-    last_row_num = m_model_dict_2->rowCount() - 1;
-    last_column_num = m_model_dict_2->columnCount();
+void MainWindow::get_words_on_table_add(){
+/*
+ * On the table_add, when header add is selected, get all text on each cells.
+ * Change also color of each cells.
+ */
+    QStringList     list_words;
+    int             column_count    = 0;
+    int             row             = 0;
+    QColor          color(255,255,153);//Pale yellow.
 
-    for(int i = 0 ; i < last_column_num ; i++){
-        data = m_model_dict_2->data(m_model_dict_2->index(last_row_num,i));
-        s_list.append(data.toString());
-        //list.table[i] = data.toStringList();
+    // Récupérer le nombre de colonnes dans la table
+    column_count = ui->table_add->columnCount();
 
-        qDebug()<<i<<" = "<<data.toString();
-
-        //Change the color of the last row, when SQL database updated.
-        if(m_flag_color == YELLOW_CEll){
-            color = QColor(255,255,153);//Pale yellow.
-        }
-        else{
-            color = QColor(255,204,153);//Pale orange.
-        }
-        m_model_dict_2->item(last_row_num,i)->setBackground(color);
+    //Check which color wapplied to the cell, when SQL database updated.
+    if(m_flag_color == YELLOW_CEll){
+        color = QColor(255,255,153);//Pale yellow.
+    }
+    else{
+        color = QColor(255,204,153);//Pale orange.
     }
 
-    //Change de color for next update :
+    // Loop to get text en cells :
+    for (int col = 0; col < column_count; ++col) {
+        QTableWidgetItem *item = ui->table_add->item(row, col);
+
+        if (item) {
+            // Get text, if element exist.
+            list_words.append(item->text());
+        }
+        else {
+            // If cell empty, add empty text.
+            list_words.append("");
+
+            //Add empty text, otherwise the code crash
+            // if you chnage de color, because object doesn't exist.
+            ui->table_add->setItem(row, col, new QTableWidgetItem(""));
+
+            //qDebug()<< "cellule vide";
+        }
+
+        ui->table_add->item(row, col)->setBackground(color);
+    }
+
+    //Change flag color for next update :
     if(m_flag_color == YELLOW_CEll){
         m_flag_color = ORANGE_CEll;
     }
@@ -516,10 +535,9 @@ void MainWindow::handle_pb_add_clicked(){
         m_flag_color = YELLOW_CEll;//Go back to yellow on next update.
     }
 
-    qDebug()<<"s_list = "<<s_list;
-    qDebug()<<"s_list[0] = "<<s_list[0];
+    qDebug() << "list of words :" << list_words;
 
-    emit add_data_to_database(s_list);
+    emit add_data_to_database(list_words);
 }
 //-------------------------------------------------------------------------------------------------
 
@@ -548,4 +566,8 @@ void MainWindow::show_message_to_status_bar(QString message){
 }
 
 //-------------------------------------------------------------------------------------------------
+
+
+
+
 

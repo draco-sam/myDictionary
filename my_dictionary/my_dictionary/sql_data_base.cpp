@@ -297,7 +297,8 @@ void SqlDataBase::add_data_to_db(QStringList s_list){
         qDebug() << "Nouvelle ligne ajoutée avec succès.";
 
         emit send_message_to_status_bar("SQL database is updated : " + m_current_time.currentTime().toString());
-    } else {
+    }
+    else {
         qDebug() << "Erreur d'insertion";
     }
 }

@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
     QObject::connect(&main_window, &MainWindow::add_data_to_database, &sql_db, &SqlDataBase::add_data_to_db);
     QObject::connect(&sql_db, &SqlDataBase::send_message_to_status_bar, &main_window, &MainWindow::show_message_to_status_bar);
 
+    //Manage the push button pb_db_next :
     QObject::connect(&main_window, &MainWindow::show_next_page, &sql_db, &SqlDataBase::ask_next_data);
     QObject::connect(&sql_db, &SqlDataBase::send_next_list, &main_window, &MainWindow::main_table_update);
 

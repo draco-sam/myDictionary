@@ -34,6 +34,7 @@ class MainWindow : public QMainWindow
         void creat_widget_2();
         uint16_t get_row_last() const;
         void table_clear();
+        void get_words_on_table_add();
 
     signals:
         void get_tree_flag(bool flag);
@@ -51,9 +52,9 @@ class MainWindow : public QMainWindow
         void receive_string_list(QStringList list);
         void tree_check_flag();
         void show_message_to_status_bar(QString message);
-        void handle_pb_add_clicked();
         void handle_pb_db_next_clicked();
         void main_table_update(ListData list);
+        void handle_table_header_selection(int row);
 
 
     private:

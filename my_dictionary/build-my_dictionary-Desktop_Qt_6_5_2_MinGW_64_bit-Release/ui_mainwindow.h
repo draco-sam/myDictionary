@@ -25,6 +25,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTableView>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QTreeView>
 #include <QtWidgets/QVBoxLayout>
@@ -38,14 +39,16 @@ public:
     QAction *actionTest;
     QWidget *centralwidget;
     QGridLayout *gridLayout;
-    QHBoxLayout *horizontalLayout;
+    QTableView *table_data_base;
+    QTreeView *treeView;
+    QVBoxLayout *verticalLayout_3;
+    QTableWidget *table_add;
+    QHBoxLayout *horizontal_layout_page;
     QPushButton *pb_db_begin;
     QPushButton *pb_db_previous;
     QLineEdit *line_current_page_num;
     QPushButton *pb_db_next;
     QPushButton *pb_db_end;
-    QTableView *table_data_base;
-    QTreeView *treeView;
     QMenuBar *menubar;
     QMenu *menuFile;
     QMenu *menuEdition;
@@ -66,7 +69,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(818, 597);
+        MainWindow->resize(818, 686);
         actionTest = new QAction(MainWindow);
         actionTest->setObjectName("actionTest");
         QIcon icon;
@@ -81,39 +84,6 @@ public:
         centralwidget->setObjectName("centralwidget");
         gridLayout = new QGridLayout(centralwidget);
         gridLayout->setObjectName("gridLayout");
-        horizontalLayout = new QHBoxLayout();
-        horizontalLayout->setObjectName("horizontalLayout");
-        pb_db_begin = new QPushButton(centralwidget);
-        pb_db_begin->setObjectName("pb_db_begin");
-
-        horizontalLayout->addWidget(pb_db_begin);
-
-        pb_db_previous = new QPushButton(centralwidget);
-        pb_db_previous->setObjectName("pb_db_previous");
-
-        horizontalLayout->addWidget(pb_db_previous);
-
-        line_current_page_num = new QLineEdit(centralwidget);
-        line_current_page_num->setObjectName("line_current_page_num");
-        line_current_page_num->setMaximumSize(QSize(100, 16777215));
-        line_current_page_num->setAlignment(Qt::AlignCenter);
-        line_current_page_num->setReadOnly(true);
-
-        horizontalLayout->addWidget(line_current_page_num);
-
-        pb_db_next = new QPushButton(centralwidget);
-        pb_db_next->setObjectName("pb_db_next");
-
-        horizontalLayout->addWidget(pb_db_next);
-
-        pb_db_end = new QPushButton(centralwidget);
-        pb_db_end->setObjectName("pb_db_end");
-
-        horizontalLayout->addWidget(pb_db_end);
-
-
-        gridLayout->addLayout(horizontalLayout, 1, 1, 1, 1);
-
         table_data_base = new QTableView(centralwidget);
         table_data_base->setObjectName("table_data_base");
 
@@ -132,6 +102,86 @@ public:
         treeView->setExpandsOnDoubleClick(true);
 
         gridLayout->addWidget(treeView, 0, 0, 1, 1);
+
+        verticalLayout_3 = new QVBoxLayout();
+        verticalLayout_3->setObjectName("verticalLayout_3");
+        table_add = new QTableWidget(centralwidget);
+        if (table_add->columnCount() < 10)
+            table_add->setColumnCount(10);
+        QTableWidgetItem *__qtablewidgetitem = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(0, __qtablewidgetitem);
+        QTableWidgetItem *__qtablewidgetitem1 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(1, __qtablewidgetitem1);
+        QTableWidgetItem *__qtablewidgetitem2 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(2, __qtablewidgetitem2);
+        QTableWidgetItem *__qtablewidgetitem3 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(3, __qtablewidgetitem3);
+        QTableWidgetItem *__qtablewidgetitem4 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(4, __qtablewidgetitem4);
+        QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(5, __qtablewidgetitem5);
+        QTableWidgetItem *__qtablewidgetitem6 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(6, __qtablewidgetitem6);
+        QTableWidgetItem *__qtablewidgetitem7 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(7, __qtablewidgetitem7);
+        QTableWidgetItem *__qtablewidgetitem8 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(8, __qtablewidgetitem8);
+        QTableWidgetItem *__qtablewidgetitem9 = new QTableWidgetItem();
+        table_add->setHorizontalHeaderItem(9, __qtablewidgetitem9);
+        if (table_add->rowCount() < 1)
+            table_add->setRowCount(1);
+        QBrush brush(QColor(255, 0, 0, 255));
+        brush.setStyle(Qt::SolidPattern);
+        QFont font;
+        font.setBold(true);
+        QTableWidgetItem *__qtablewidgetitem10 = new QTableWidgetItem();
+        __qtablewidgetitem10->setFont(font);
+        __qtablewidgetitem10->setBackground(QColor(255, 255, 255));
+        __qtablewidgetitem10->setForeground(brush);
+        table_add->setVerticalHeaderItem(0, __qtablewidgetitem10);
+        QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
+        table_add->setItem(0, 0, __qtablewidgetitem11);
+        table_add->setObjectName("table_add");
+        table_add->setMinimumSize(QSize(0, 20));
+        table_add->setMaximumSize(QSize(16777215, 50));
+
+        verticalLayout_3->addWidget(table_add);
+
+        horizontal_layout_page = new QHBoxLayout();
+        horizontal_layout_page->setObjectName("horizontal_layout_page");
+        pb_db_begin = new QPushButton(centralwidget);
+        pb_db_begin->setObjectName("pb_db_begin");
+
+        horizontal_layout_page->addWidget(pb_db_begin);
+
+        pb_db_previous = new QPushButton(centralwidget);
+        pb_db_previous->setObjectName("pb_db_previous");
+
+        horizontal_layout_page->addWidget(pb_db_previous);
+
+        line_current_page_num = new QLineEdit(centralwidget);
+        line_current_page_num->setObjectName("line_current_page_num");
+        line_current_page_num->setMaximumSize(QSize(100, 16777215));
+        line_current_page_num->setAlignment(Qt::AlignCenter);
+        line_current_page_num->setReadOnly(true);
+
+        horizontal_layout_page->addWidget(line_current_page_num);
+
+        pb_db_next = new QPushButton(centralwidget);
+        pb_db_next->setObjectName("pb_db_next");
+
+        horizontal_layout_page->addWidget(pb_db_next);
+
+        pb_db_end = new QPushButton(centralwidget);
+        pb_db_end->setObjectName("pb_db_end");
+
+        horizontal_layout_page->addWidget(pb_db_end);
+
+
+        verticalLayout_3->addLayout(horizontal_layout_page);
+
+
+        gridLayout->addLayout(verticalLayout_3, 1, 1, 1, 1);
 
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
@@ -185,9 +235,9 @@ public:
 
         pb_add = new QPushButton(dockWidgetContents_2);
         pb_add->setObjectName("pb_add");
-        QFont font;
-        font.setBold(false);
-        pb_add->setFont(font);
+        QFont font1;
+        font1.setBold(false);
+        pb_add->setFont(font1);
 
         verticalLayout->addWidget(pb_add);
 
@@ -219,6 +269,33 @@ public:
 #if QT_CONFIG(tooltip)
         actionTest->setToolTip(QCoreApplication::translate("MainWindow", "Bonjour info bulle", nullptr));
 #endif // QT_CONFIG(tooltip)
+        QTableWidgetItem *___qtablewidgetitem = table_add->horizontalHeaderItem(0);
+        ___qtablewidgetitem->setText(QCoreApplication::translate("MainWindow", "English", nullptr));
+        QTableWidgetItem *___qtablewidgetitem1 = table_add->horizontalHeaderItem(1);
+        ___qtablewidgetitem1->setText(QCoreApplication::translate("MainWindow", "French", nullptr));
+        QTableWidgetItem *___qtablewidgetitem2 = table_add->horizontalHeaderItem(2);
+        ___qtablewidgetitem2->setText(QCoreApplication::translate("MainWindow", "Family", nullptr));
+        QTableWidgetItem *___qtablewidgetitem3 = table_add->horizontalHeaderItem(3);
+        ___qtablewidgetitem3->setText(QCoreApplication::translate("MainWindow", "Frequency", nullptr));
+        QTableWidgetItem *___qtablewidgetitem4 = table_add->horizontalHeaderItem(4);
+        ___qtablewidgetitem4->setText(QCoreApplication::translate("MainWindow", "Date", nullptr));
+        QTableWidgetItem *___qtablewidgetitem5 = table_add->horizontalHeaderItem(5);
+        ___qtablewidgetitem5->setText(QCoreApplication::translate("MainWindow", "Image", nullptr));
+        QTableWidgetItem *___qtablewidgetitem6 = table_add->horizontalHeaderItem(6);
+        ___qtablewidgetitem6->setText(QCoreApplication::translate("MainWindow", "Syllable", nullptr));
+        QTableWidgetItem *___qtablewidgetitem7 = table_add->horizontalHeaderItem(7);
+        ___qtablewidgetitem7->setText(QCoreApplication::translate("MainWindow", "Sentence", nullptr));
+        QTableWidgetItem *___qtablewidgetitem8 = table_add->horizontalHeaderItem(8);
+        ___qtablewidgetitem8->setText(QCoreApplication::translate("MainWindow", "Visibility English", nullptr));
+        QTableWidgetItem *___qtablewidgetitem9 = table_add->horizontalHeaderItem(9);
+        ___qtablewidgetitem9->setText(QCoreApplication::translate("MainWindow", "Visibility French", nullptr));
+        QTableWidgetItem *___qtablewidgetitem10 = table_add->verticalHeaderItem(0);
+        ___qtablewidgetitem10->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
+
+        const bool __sortingEnabled = table_add->isSortingEnabled();
+        table_add->setSortingEnabled(false);
+        table_add->setSortingEnabled(__sortingEnabled);
+
         pb_db_begin->setText(QCoreApplication::translate("MainWindow", "<< (1)", nullptr));
         pb_db_previous->setText(QCoreApplication::translate("MainWindow", "< (2)", nullptr));
         line_current_page_num->setText(QCoreApplication::translate("MainWindow", "3", nullptr));

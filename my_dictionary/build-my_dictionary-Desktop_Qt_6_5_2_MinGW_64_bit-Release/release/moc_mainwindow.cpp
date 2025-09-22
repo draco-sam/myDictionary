@@ -61,14 +61,15 @@ static constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers:
     "tree_check_flag",
     "show_message_to_status_bar",
     "message",
-    "handle_pb_add_clicked",
     "handle_pb_db_next_clicked",
     "main_table_update",
-    "ListData"
+    "ListData",
+    "handle_table_header_selection",
+    "row"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {
-    uint offsetsAndSizes[52];
+    uint offsetsAndSizes[54];
     char stringdata0[11];
     char stringdata1[14];
     char stringdata2[1];
@@ -91,10 +92,11 @@ struct qt_meta_stringdata_CLASSMainWindowENDCLASS_t {
     char stringdata19[16];
     char stringdata20[27];
     char stringdata21[8];
-    char stringdata22[22];
-    char stringdata23[26];
-    char stringdata24[18];
-    char stringdata25[9];
+    char stringdata22[26];
+    char stringdata23[18];
+    char stringdata24[9];
+    char stringdata25[30];
+    char stringdata26[4];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASSMainWindowENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -122,10 +124,11 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSMainWindowENDCLASS_t qt_meta_st
         QT_MOC_LITERAL(256, 15),  // "tree_check_flag"
         QT_MOC_LITERAL(272, 26),  // "show_message_to_status_bar"
         QT_MOC_LITERAL(299, 7),  // "message"
-        QT_MOC_LITERAL(307, 21),  // "handle_pb_add_clicked"
-        QT_MOC_LITERAL(329, 25),  // "handle_pb_db_next_clicked"
-        QT_MOC_LITERAL(355, 17),  // "main_table_update"
-        QT_MOC_LITERAL(373, 8)   // "ListData"
+        QT_MOC_LITERAL(307, 25),  // "handle_pb_db_next_clicked"
+        QT_MOC_LITERAL(333, 17),  // "main_table_update"
+        QT_MOC_LITERAL(351, 8),  // "ListData"
+        QT_MOC_LITERAL(360, 29),  // "handle_table_header_selection"
+        QT_MOC_LITERAL(390, 3)   // "row"
     },
     "MainWindow",
     "get_tree_flag",
@@ -149,10 +152,11 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASSMainWindowENDCLASS_t qt_meta_st
     "tree_check_flag",
     "show_message_to_status_bar",
     "message",
-    "handle_pb_add_clicked",
     "handle_pb_db_next_clicked",
     "main_table_update",
-    "ListData"
+    "ListData",
+    "handle_table_header_selection",
+    "row"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -188,8 +192,8 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
       19,    0,  131,    2, 0x0a,   17 /* Public */,
       20,    1,  132,    2, 0x0a,   18 /* Public */,
       22,    0,  135,    2, 0x0a,   20 /* Public */,
-      23,    0,  136,    2, 0x0a,   21 /* Public */,
-      24,    1,  137,    2, 0x0a,   22 /* Public */,
+      23,    1,  136,    2, 0x0a,   21 /* Public */,
+      25,    1,  139,    2, 0x0a,   23 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::Bool,    3,
@@ -208,8 +212,8 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,   21,
     QMetaType::Void,
-    QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 25,   18,
+    QMetaType::Void, 0x80000000 | 24,   18,
+    QMetaType::Void, QMetaType::Int,   26,
 
        0        // eod
 };
@@ -255,13 +259,14 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'show_message_to_status_bar'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<QString, std::false_type>,
-        // method 'handle_pb_add_clicked'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'handle_pb_db_next_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'main_table_update'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
-        QtPrivate::TypeAndForceComplete<ListData, std::false_type>
+        QtPrivate::TypeAndForceComplete<ListData, std::false_type>,
+        // method 'handle_table_header_selection'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<int, std::false_type>
     >,
     nullptr
 } };
@@ -285,9 +290,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 10: _t->receive_string_list((*reinterpret_cast< std::add_pointer_t<QStringList>>(_a[1]))); break;
         case 11: _t->tree_check_flag(); break;
         case 12: _t->show_message_to_status_bar((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
-        case 13: _t->handle_pb_add_clicked(); break;
-        case 14: _t->handle_pb_db_next_clicked(); break;
-        case 15: _t->main_table_update((*reinterpret_cast< std::add_pointer_t<ListData>>(_a[1]))); break;
+        case 13: _t->handle_pb_db_next_clicked(); break;
+        case 14: _t->main_table_update((*reinterpret_cast< std::add_pointer_t<ListData>>(_a[1]))); break;
+        case 15: _t->handle_table_header_selection((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
