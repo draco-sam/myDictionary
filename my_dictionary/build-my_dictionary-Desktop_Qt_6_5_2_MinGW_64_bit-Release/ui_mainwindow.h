@@ -62,7 +62,6 @@ public:
     QVBoxLayout *verticalLayout;
     QCheckBox *checkBox;
     QPushButton *pb_delete;
-    QPushButton *pb_add;
     QToolBar *toolBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -233,14 +232,6 @@ public:
 
         verticalLayout->addWidget(pb_delete);
 
-        pb_add = new QPushButton(dockWidgetContents_2);
-        pb_add->setObjectName("pb_add");
-        QFont font1;
-        font1.setBold(false);
-        pb_add->setFont(font1);
-
-        verticalLayout->addWidget(pb_add);
-
 
         verticalLayout_2->addLayout(verticalLayout);
 
@@ -309,7 +300,6 @@ public:
         dockWidget_2->setWindowTitle(QCoreApplication::translate("MainWindow", "Games", nullptr));
         checkBox->setText(QCoreApplication::translate("MainWindow", "Show Menu Bar", nullptr));
         pb_delete->setText(QCoreApplication::translate("MainWindow", "Delete", nullptr));
-        pb_add->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
         toolBar->setWindowTitle(QCoreApplication::translate("MainWindow", "toolBar", nullptr));
     } // retranslateUi
 

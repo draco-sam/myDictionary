@@ -243,43 +243,43 @@ void MainWindow::table_edit(ListData list_data){
     }
     //---------------------------------------------------------------------------------------------
 
-    //-----------------------------------------------------------------------------------
-    //Add empty cells, not editable :
-    //m_model_dict_2->setItem(i_row,new QStandardItem(""));
+//    //-----------------------------------------------------------------------------------
+//    //Add empty cells, not editable :
+//    //m_model_dict_2->setItem(i_row,new QStandardItem(""));
 
-    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
-        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
+//    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
+//        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
 
-        //---------------------------------------------------------------------
-        //Cellule non éditable :
-        QStandardItem *item = m_model_dict_2->item(i_row, i_column);
-        if (item) {
-            item->setBackground(QColor(Qt::lightGray));
+//        //---------------------------------------------------------------------
+//        //Cellule non éditable :
+//        QStandardItem *item = m_model_dict_2->item(i_row, i_column);
+//        if (item) {
+//            item->setBackground(QColor(Qt::lightGray));
 
-            // Récupérer les flags actuels de l'élément
-            Qt::ItemFlags flags = item->flags();
+//            // Récupérer les flags actuels de l'élément
+//            Qt::ItemFlags flags = item->flags();
 
-            // Enlever le flag Qt::ItemIsEditable
-            flags &= ~Qt::ItemIsEditable;
+//            // Enlever le flag Qt::ItemIsEditable
+//            flags &= ~Qt::ItemIsEditable;
 
-            // Appliquer les nouveaux flags
-            item->setFlags(flags);
-        }
-        //---------------------------------------------------------------------
-    }
-    //-----------------------------------------------------------------------------------
+//            // Appliquer les nouveaux flags
+//            item->setFlags(flags);
+//        }
+//        //---------------------------------------------------------------------
+//    }
+//    //-----------------------------------------------------------------------------------
 
-    i_row++;//For editable last row.
+//    i_row++;//For editable last row.
 
-    //-----------------------------------------------------------------------------------
-    //Add one empty row at the end (just row and QStandardItem parameter) :
+//    //-----------------------------------------------------------------------------------
+//    //Add one empty row at the end (just row and QStandardItem parameter) :
 
-    //Set with empty string each column
-    //otherwise, the code will crash when we click on main add button.
-    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
-        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
-    }
-    //-----------------------------------------------------------------------------------
+//    //Set with empty string each column
+//    //otherwise, the code will crash when we click on main add button.
+//    for(i_column=0 ; i_column < m_table_main_column_size ; i_column++){
+//        m_model_dict_2->setItem(i_row,i_column,new QStandardItem(""));
+//    }
+//    //-----------------------------------------------------------------------------------
 
     //Test to read text in a specific row and column.
     //qDebug()<<"last row = "<<m_model_dict_2->item(i_row - 1,0)->text();
